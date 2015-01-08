@@ -1,2 +1,4 @@
-1) Implement PMT detectors
-2) Run Trapping Efficiency Test on Fibers
+1) Implement PMT detectors - Jed
+2) Implement Blue Light Source - Jed or Dallas
+3) Run Trapping Efficiency Test on Fibers - Dallas
+4) Create Cell Side w/ Embedded Fiber Parameter - Jed
