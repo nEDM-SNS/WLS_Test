@@ -2,3 +2,9 @@
 2) Implement Blue Light Source - Jed or Dallas
 3) Run Trapping Efficiency Test on Fibers - Dallas
 4) Create Cell Side w/ Embedded Fiber Parameter - Jed
+
+List of Parameters to determine
+1) Conversion Efficiency as a function of Wavelength in TPB
+2) Hypothetical Dead layer in TPB
+3) Absorption in Cladding of Fiber
+4) Absorption properties of Fiber
