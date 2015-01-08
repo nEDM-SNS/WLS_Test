@@ -6,7 +6,8 @@
 6) Document Current Values for Optical properties of fibers - Jed
 	a) Bulk absorption
 	b) Absorption from Bending 
-7)
+7) Move Documenatation to Repository Wiki Page - anyone with a GitHub account can edit the wiki associated with the repository.  
+This will provide better documentation moving forward.
 
 List of Parameters to determine
 1) Conversion Efficiency as a function of Wavelength in TPB
