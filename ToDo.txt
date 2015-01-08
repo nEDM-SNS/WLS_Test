@@ -1,2 +1,2 @@
 1) Implement PMT detectors
-2) Run Capture Efficiency Test on Fibers
+2) Run Trapping Efficiency Test on Fibers
