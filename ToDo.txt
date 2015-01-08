@@ -2,6 +2,11 @@
 2) Implement Blue Light Source - Jed or Dallas
 3) Run Trapping Efficiency Test on Fibers - Dallas
 4) Create Cell Side w/ Embedded Fiber Parameter - Jed
+5) Research Implementation of Fiber Emission as a function of wavelength and document - Jed 
+6) Document Current Values for Optical properties of fibers - Jed
+	a) Bulk absorption
+	b)  
+7)
 
 List of Parameters to determine
 1) Conversion Efficiency as a function of Wavelength in TPB
