@@ -5,7 +5,7 @@
 5) Research Implementation of Fiber Emission as a function of wavelength and document - Jed 
 6) Document Current Values for Optical properties of fibers - Jed
 	a) Bulk absorption
-	b)  
+	b) Absorption from Bending 
 7)
 
 List of Parameters to determine
@@ -13,3 +13,6 @@ List of Parameters to determine
 2) Hypothetical Dead layer in TPB
 3) Absorption in Cladding of Fiber
 4) Absorption properties of Fiber
+
+Questions:
+1) Currently, the materials for the fiber are core=PMMA, Clad1=PolyEthylene1, Clad2=PolyEthylene2.  This was taken from the LXe Geant4 example. The data sheet from Kuraray showed core=PS, Clad1=PMMA, Clad2=FP.  Jed simply changed the indexes of refraction to match the Kuraray data sheet.  Is there a reason to change the materials to match the data sheet, or is index of refraction the only important property? If we change them, what should be used for the FP (Florinated Polymer)?  If we leave it, will this cause confusion later on (i.e. will we have to explain to 50 different people why the index of refraction is all that matters)?
