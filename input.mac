@@ -1,0 +1,7 @@
+/gps/particle opticalphoton
+/gps/energy 2.95 eV #blue photon
+/gps/position 0 1 0 cm
+/gps/ang/type beam1d
+/gps/direction 0 -1 0
+/gps/polarization 0 0 1 # dummy polarization
+/run/beamOn 1000

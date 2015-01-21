@@ -17,7 +17,7 @@ NedmWLSFiber::NedmWLSFiber(G4RotationMatrix *pRot,
                            G4int pCopyNo)
 :G4PVPlacement(pRot,tlate,
                new G4LogicalVolume(new G4Box("temp",1,1,1),
-                                   G4Material::GetMaterial("G4_AIR"),
+                                   G4Material::GetMaterial("Air"),
                                    "temp",0,0,0),
                "Cladding2",pMotherLogical,pMany,pCopyNo)
 {

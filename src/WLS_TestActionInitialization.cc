@@ -2,42 +2,42 @@
 
 #include "GPSPrimaryGeneratorAction.hh"
 
-//#include "LightCollectionRunAction.hh"
-//#include "LightCollectionEventAction.hh"
-//#include "LightCollectionSteppingAction.hh"
-//#include "LightCollectionStackingAction.hh"
+#include "WLS_TestRunAction.hh"
+//#include "WLS_TestEventAction.hh"
+#include "WLS_TestSteppingAction.hh"
+//#include "WLS_TestStackingAction.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LightCollectionActionInitialization::LightCollectionActionInitialization()
+WLS_TestActionInitialization::WLS_TestActionInitialization()
 : G4VUserActionInitialization()
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-LightCollectionActionInitialization::~LightCollectionActionInitialization()
+WLS_TestActionInitialization::~WLS_TestActionInitialization()
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LightCollectionActionInitialization::BuildForMaster() const
+void WLS_TestActionInitialization::BuildForMaster() const
 {
-    //SetUserAction(new LightCollectionRunAction());
+    //SetUserAction(new WLS_TestRunAction());
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void LightCollectionActionInitialization::Build() const
+void WLS_TestActionInitialization::Build() const
 {
-    //SetUserAction(new LightCollectionRunAction());
+    SetUserAction(new WLS_TestRunAction());
     
     SetUserAction(new GPSPrimaryGeneratorAction());
     
-    //SetUserAction(new LightCollectionEventAction());
+    //SetUserAction(new WLS_TestEventAction());
     
-    //SetUserAction(new LightCollectionStackingAction());
+    //SetUserAction(new WLS_TestStackingAction());
     
-    //SetUserAction(new LightCollectionSteppingAction());
+    SetUserAction(new WLS_TestSteppingAction());
 
 }
 

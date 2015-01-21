@@ -87,7 +87,7 @@ int main(int argc,char** argv)
     // Physics list
     runManager-> SetUserInitialization(new NedmPhysicsList());
     // User action initialization
-    runManager->SetUserInitialization(new LightCollectionActionInitialization());
+    runManager->SetUserInitialization(new WLS_TestActionInitialization());
     
     // Initialize G4 kernel
     //

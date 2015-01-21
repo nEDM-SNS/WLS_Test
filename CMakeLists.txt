@@ -45,6 +45,7 @@ set(WLS_TEST_SCRIPTS
 #    80nmSource_straight.mac
 #    385nmSource_iso.mac
 #    testRun.mac
+    input.mac
     init.mac
     init_vis.mac
     gui.mac

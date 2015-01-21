@@ -8,6 +8,7 @@
 	b) Absorption from Bending 
 7) Move Documenatation to Repository Wiki Page - anyone with a GitHub account can edit the wiki associated with the repository.  
 This will provide better documentation moving forward.
+8) Update GPS code in ActionInitialization for MT mode
 
 List of Parameters to determine
 1) Conversion Efficiency as a function of Wavelength in TPB
