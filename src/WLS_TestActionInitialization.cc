@@ -5,7 +5,8 @@
 #include "WLS_TestRunAction.hh"
 //#include "WLS_TestEventAction.hh"
 #include "WLS_TestSteppingAction.hh"
-//#include "WLS_TestStackingAction.hh"
+#include "WLS_TestStackingAction.hh"
+#include "WLS_TestTrackingAction.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -35,8 +36,10 @@ void WLS_TestActionInitialization::Build() const
     
     //SetUserAction(new WLS_TestEventAction());
     
-    //SetUserAction(new WLS_TestStackingAction());
+    SetUserAction(new WLS_TestStackingAction());
     
+    SetUserAction(new WLS_TestTrackingAction());
+
     SetUserAction(new WLS_TestSteppingAction());
 
 }

@@ -44,7 +44,11 @@ void WLS_TestRunAction::BeginOfRunAction(const G4Run* aRun)
     analysisManager->OpenFile("Test");
     
     // index 0
-    analysisManager->CreateH1("Photons", "Number of Photons exiting the fiber", 10, 0, 9);
+    analysisManager->CreateH1("Photons", "Bins: 1=Primaries, 2=OpWLS Photons, 6=fiber +x end, 7=fiber -x end", 10, 0., 10.);
+    
+    analysisManager->CreateH1("wlsSpectrum", "Wavelength of photons produced in green fibers", 100, 300., 800.);
+    
+    analysisManager->CreateH1("wlsEnergy", "Energy of photons produced in green fibers", 100, 1., 4.);
    
 
 }
