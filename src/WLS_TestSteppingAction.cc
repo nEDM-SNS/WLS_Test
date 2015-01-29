@@ -41,17 +41,32 @@ void WLS_TestSteppingAction::UserSteppingAction(const G4Step* aStep)
         if( inVol->GetName() == "Fiber" && outVol->GetName() == "expHall_log") {
             G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
             
-            if (p_out->GetPosition().x() > 0.) {
+            G4double cosTheta = aStep->GetTrack()->GetMomentumDirection().x();
+            
+            if (p_out->GetPosition().x() > 0. && cosTheta > 0.) {
                 analysisManager->FillH1(0, 6);
+                analysisManager->FillH1(3, cosTheta);
+                aStep->GetTrack()->SetTrackStatus(fStopAndKill);
+                
             }
-            else
+            else if (p_out->GetPosition().x() < 0. && cosTheta < 0.)
             {
                 analysisManager->FillH1(0, 7);
+                analysisManager->FillH1(4, cosTheta);
+                aStep->GetTrack()->SetTrackStatus(fStopAndKill);
             }
+            else {
+                // G4cout << "!!!!! Reflection !!!!!" << G4endl;
+            }
+            /*
+            G4cout << "Position: " << p_out->GetPosition() << G4endl;
+            G4cout << "PreStepMomDir: " <<  p_in->GetMomentumDirection() << G4endl;
+            G4cout << "PostStepMomDir: " <<  p_out->GetMomentumDirection() << G4endl;
             
-            //G4cout << "Position: " << p_out->GetPosition() << G4endl;
+            G4cout << "Step Process" << p_out->GetProcessDefinedStep()->GetProcessName() << G4endl;
+             */
             
-            aStep->GetTrack()->SetTrackStatus(fStopAndKill);
+            
         }
 
     }

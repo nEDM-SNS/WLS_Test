@@ -26,12 +26,15 @@ WLS_TestStackingAction::~WLS_TestStackingAction() {}
 G4ClassificationOfNewTrack
 WLS_TestStackingAction::ClassifyNewTrack(const G4Track * aTrack){
     
-    G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+    // G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
     
+    // The following is now implemented in the Tracking Action
+    /*
+     
     if (aTrack->GetParentID()==0) {
         analysisManager->FillH1(0, 1);
     }
-    
+
     //Count what process generated the optical photons
     if(aTrack->GetDefinition()==G4OpticalPhoton::OpticalPhotonDefinition()){
         // particle is optical photon
@@ -45,13 +48,12 @@ WLS_TestStackingAction::ClassifyNewTrack(const G4Track * aTrack){
                 analysisManager->FillH1(2, aTrack->GetDynamicParticle()->GetKineticEnergy()/eV);
             }
 
-            if (aTrack->GetKineticEnergy() != aTrack->GetTotalEnergy()) {
-                G4cout << "!!!!!Energies not Equal !!!" << G4endl;
-            }
         }
     }
-    else{
-    }
+     
+    else{}
+    */
+    
     return fUrgent;
 }
 
