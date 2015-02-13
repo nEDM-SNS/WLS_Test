@@ -50,7 +50,7 @@ class NedmWLSFiber : public G4PVPlacement
     G4double fMirrorSPhi;
     G4double fMirrorEPhi;
     
-    G4double fMirrorCenter;
+    G4double fMirrorPosZ;
     G4double fMirrorReflectivity;
     
 };
