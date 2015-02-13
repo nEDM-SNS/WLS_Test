@@ -59,7 +59,6 @@
 //G4bool WLS_TestDetectorConstruction::fSphereOn = true;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 WLS_TestDetectorConstruction::WLS_TestDetectorConstruction()
 : fMPTPStyrene(NULL)
 {
@@ -189,6 +188,8 @@ void WLS_TestDetectorConstruction::DefineMaterials(){
     clad2Property->AddProperty("RINDEX",wls_Energy,RefractiveIndexClad2,wlsnum);
     clad2Property->AddProperty("ABSLENGTH",wls_Energy,AbsFiber,wlsnum);
     fPethylene2->SetMaterialPropertiesTable(clad2Property);
+    
+    
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -239,6 +240,9 @@ G4VPhysicalVolume* WLS_TestDetectorConstruction::ConstructDetector()
         G4double Y=-(spacing)*(fNfibers-1)*0.5 + i*spacing;
         new NedmWLSFiber(rm,G4ThreeVector(0.,Y,0.),fExperimentalHall_log,false,0);
     }
+    
+    
+
 
 /*
     //Place the WLS slab

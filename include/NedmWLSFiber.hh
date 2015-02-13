@@ -43,6 +43,16 @@ class NedmWLSFiber : public G4PVPlacement
     G4double fClad2_z;
     G4double fClad2_sphi;
     G4double fClad2_ephi;
+    
+    G4double fMirrorRmax;
+    G4double fMirrorRmin;
+    G4double fMirrorZ;
+    G4double fMirrorSPhi;
+    G4double fMirrorEPhi;
+    
+    G4double fMirrorCenter;
+    G4double fMirrorReflectivity;
+    
 };
 
 #endif

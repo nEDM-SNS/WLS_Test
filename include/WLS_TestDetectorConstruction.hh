@@ -7,6 +7,8 @@ class G4Box;
 class G4Tubs;
 class G4Sphere;
 
+class G4OpticalSurface;
+
 #include "G4Material.hh"
 #include "G4VisAttributes.hh"
 #include "G4RotationMatrix.hh"
@@ -39,6 +41,8 @@ class WLS_TestDetectorConstruction : public G4VUserDetectorConstruction
 
     void DefineMaterials();
     G4VPhysicalVolume* ConstructDetector();
+    
+    static const G4int kEnergies;
 
     G4Box* fExperimentalHall_box;
     G4LogicalVolume* fExperimentalHall_log;
@@ -62,6 +66,7 @@ class WLS_TestDetectorConstruction : public G4VUserDetectorConstruction
     G4int fNfibers;
 
     G4MaterialPropertiesTable* fMPTPStyrene;
+
 
 };
 

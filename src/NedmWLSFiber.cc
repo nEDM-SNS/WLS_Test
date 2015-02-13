@@ -23,6 +23,9 @@ NedmWLSFiber::NedmWLSFiber(G4RotationMatrix *pRot,
 {
     CopyValues();
     
+    G4RotationMatrix* zRot = new G4RotationMatrix;
+    zRot->rotateZ(90*deg);
+    
     // The Fiber
     //
     G4Tubs* fiber_tube =
@@ -63,6 +66,46 @@ NedmWLSFiber::NedmWLSFiber(G4RotationMatrix *pRot,
 
     
     SetLogicalVolume(fClad2_log);
+    
+    // Fiber Reflector
+    G4Tubs* solidMirror = new G4Tubs("Mirror",
+                                     fMirrorRmin,
+                                     fMirrorRmax,
+                                     fMirrorZ,
+                                     fMirrorSPhi,
+                                     fMirrorEPhi);
+    
+    G4LogicalVolume* logicMirror = new G4LogicalVolume(solidMirror,
+                                                        G4Material::GetMaterial("PMMA"),
+                                                       "Mirror");
+
+    
+    const G4int kEnergies = 3;
+    
+    G4double mirror_reflectivity_ = 0.998;
+    G4double the_photon_energies_[kEnergies] = {2.034*eV, 4.136*eV, 16*eV};
+    
+    G4OpticalSurface* mirror_surface_ =
+    new G4OpticalSurface("MirrorSurface", glisur, groundfrontpainted,
+                         dielectric_dielectric);
+    G4double mirror_REFL[kEnergies] = {mirror_reflectivity_, mirror_reflectivity_, mirror_reflectivity_};
+    
+    G4MaterialPropertiesTable* mirror_mt_ = new G4MaterialPropertiesTable();
+    mirror_mt_->AddProperty("REFLECTIVITY", the_photon_energies_, mirror_REFL, kEnergies);
+    mirror_surface_->SetMaterialPropertiesTable(mirror_mt_);
+    
+    G4VisAttributes* MirrorVis=new G4VisAttributes(G4Color(0.0,0.0,1.0));
+    MirrorVis->SetVisibility(true);
+    logicMirror->SetVisAttributes(MirrorVis);
+    
+    new G4PVPlacement(zRot,                                 //no rotation
+                      G4ThreeVector(fMirrorCenter,0.,0.),   //position
+                      logicMirror,                  //its logical volume
+                      "Mirror",                     //its name
+                      fClad2_log,                   //its mother  volume
+                      false,                        //no boolean operation
+                      0);                           //copy number
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -89,5 +132,15 @@ void NedmWLSFiber::CopyValues(){
     fClad2_z    = fFiber_z;
     fClad2_sphi = fFiber_sphi;
     fClad2_ephi = fFiber_ephi;
+    
+    fMirrorRmax  = fClad2_rmax;
+    fMirrorRmin  = 0*cm;
+    fMirrorZ     = 1*cm;
+    fMirrorSPhi  = fFiber_sphi;
+    fMirrorEPhi  = fFiber_ephi;
+    
+    fMirrorCenter        = -11*cm;
+    fMirrorReflectivity = 1;
+
     
 }
