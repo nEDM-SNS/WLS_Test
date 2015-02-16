@@ -54,7 +54,7 @@ WLS_TestDetectorConstruction::~WLS_TestDetectorConstruction() {
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void WLS_TestDetectorConstruction::DefineMaterials(){
-    fMaterials = WLS_TestMaterials::GetInstance();
+    //fMaterials = WLS_TestMaterials::GetInstance();
 
     
     G4double a;  // atomic mass
@@ -209,51 +209,15 @@ G4VPhysicalVolume* WLS_TestDetectorConstruction::ConstructDetector()
     
     // Demonstration of rotation - use if needed
     G4RotationMatrix* rm = new G4RotationMatrix();
-    rm->rotateY(90*deg);
+    rm->rotateY(-90*deg);
     
+    // Switch for fiber reflector
+    G4bool fibRefl = false;
     //Place fibers
     for(G4int i=0;i<fNfibers;i++){
         G4double Y=-(spacing)*(fNfibers-1)*0.5 + i*spacing;
-        new NedmWLSFiber(rm,G4ThreeVector(0.,Y,0.),fExperimentalHall_log,false,0);
+        new NedmWLSFiber(rm,G4ThreeVector(0.,Y,0.),fExperimentalHall_log,false,0,fibRefl);
     }
-    
-    
-
-
-/*
-    //Place the WLS slab
-    if(fWLSslab){
-        G4VPhysicalVolume* slab = new WLS_TestWLSSlab(0,G4ThreeVector(0.,0.,
-                                                                      -fScint_z/2.-fSlab_z-1.*cm),
-                                                      fExperimentalHall_log,false,0,
-                                                      this);
-        
-        //Surface properties for the WLS slab
-        G4OpticalSurface* scintWrap = new G4OpticalSurface("ScintWrap");
-        
-        new G4LogicalBorderSurface("ScintWrap", slab,
-                                   fExperimentalHall_phys,
-                                   scintWrap);
-        
-        scintWrap->SetType(dielectric_metal);
-        scintWrap->SetFinish(polished);
-        scintWrap->SetModel(glisur);
-        
-        G4double pp[] = {2.0*eV, 3.5*eV};
-        const G4int num = sizeof(pp)/sizeof(G4double);
-        G4double reflectivity[] = {1., 1.};
-        assert(sizeof(reflectivity) == sizeof(pp));
-        G4double efficiency[] = {0.0, 0.0};
-        assert(sizeof(efficiency) == sizeof(pp));
-        
-        G4MaterialPropertiesTable* scintWrapProperty
-        = new G4MaterialPropertiesTable();
-        
-        scintWrapProperty->AddProperty("REFLECTIVITY",pp,reflectivity,num);
-        scintWrapProperty->AddProperty("EFFICIENCY",pp,efficiency,num);
-        scintWrap->SetMaterialPropertiesTable(scintWrapProperty);
-    }
-    */
     
     return fExperimentalHall_phys;
 }

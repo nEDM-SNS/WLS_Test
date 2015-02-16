@@ -18,7 +18,8 @@ class NedmWLSFiber : public G4PVPlacement
                 const G4ThreeVector &tlate,
                 G4LogicalVolume *pMotherLogical,
                 G4bool pMany,
-                G4int pCopyNo);
+                G4int pCopyNo,
+                 G4bool Reflector=false);
 
   private:
 
@@ -46,7 +47,7 @@ class NedmWLSFiber : public G4PVPlacement
     
     G4double fMirrorRmax;
     G4double fMirrorRmin;
-    G4double fMirrorZ;
+    G4double fMirrorThick;
     G4double fMirrorSPhi;
     G4double fMirrorEPhi;
     

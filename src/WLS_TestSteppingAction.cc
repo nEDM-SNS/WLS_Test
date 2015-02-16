@@ -21,16 +21,8 @@ void WLS_TestSteppingAction::UserSteppingAction(const G4Step* aStep)
     // get point of entry and exit
     const G4StepPoint *p_in  = aStep->GetPreStepPoint();
     const G4StepPoint *p_out = aStep->GetPostStepPoint();
-    //const G4VProcess *p1 = p_in->GetProcessDefinedStep();
-    //const G4VProcess *p2 = p_out->GetProcessDefinedStep();
 
-/*    const G4VProcess * creatorProcess = aStep->GetTrack()->GetCreatorProcess();
-    if (creatorProcess && aStep->GetTrack()->GetCurrentStepNumber() == 1) {
-            G4cout << "Creator Process: " << aStep->GetTrack()->GetCreatorProcess()->GetProcessName() << G4endl;
-    }
-    else { G4cout << "!!!NULL Creator Process!!!" << G4endl;}
-*/
-    
+    // Ignore 1st and last step
     if (aStep->GetTrack()->GetCurrentStepNumber() != 1 && p_out->GetStepStatus()!= fWorldBoundary) {
         G4LogicalVolume* inVol;
         inVol = p_in->GetTouchableHandle()->GetVolume()->GetLogicalVolume();
@@ -38,13 +30,13 @@ void WLS_TestSteppingAction::UserSteppingAction(const G4Step* aStep)
         G4LogicalVolume* outVol;
         outVol = p_out->GetTouchableHandle()->GetVolume()->GetLogicalVolume();
         
-        if( inVol->GetName() == "Fiber" && outVol->GetName() == "expHall_log") {
+        if( (inVol->GetName() == "Fiber" || inVol->GetName() == "Mirror") && outVol->GetName() == "expHall_log") {
             G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
             
             G4double cosTheta = aStep->GetTrack()->GetMomentumDirection().x();
             
 // If the following flag is set, the photons that reflect from the end of the tube propagate as normal
-#if 1
+#if 0
             if (p_out->GetPosition().x() > 0. && cosTheta > 0.) {
                 analysisManager->FillH1(0, 6);
                 analysisManager->FillH1(3, cosTheta);

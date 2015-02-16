@@ -14,7 +14,8 @@ NedmWLSFiber::NedmWLSFiber(G4RotationMatrix *pRot,
                            const G4ThreeVector &tlate,
                            G4LogicalVolume *pMotherLogical,
                            G4bool pMany,
-                           G4int pCopyNo)
+                           G4int pCopyNo,
+                           G4bool Reflector)
 :G4PVPlacement(pRot,tlate,
                new G4LogicalVolume(new G4Box("temp",1,1,1),
                                    G4Material::GetMaterial("Air"),
@@ -67,52 +68,55 @@ NedmWLSFiber::NedmWLSFiber(G4RotationMatrix *pRot,
     
     SetLogicalVolume(fClad2_log);
     
-    // Fiber Reflector
-    G4Tubs* solidMirror = new G4Tubs("Mirror",
-                                     fMirrorRmin,
-                                     fMirrorRmax,
-                                     fMirrorZ,
-                                     fMirrorSPhi,
-                                     fMirrorEPhi);
-    
-    G4LogicalVolume* logicMirror = new G4LogicalVolume(solidMirror,
-                                                        G4Material::GetMaterial("PMMA"),
-                                                       "Mirror");
+    if (Reflector) {
+        // Fiber Reflector
+        G4Tubs* solidMirror = new G4Tubs("Mirror",
+                                         fMirrorRmin,
+                                         fMirrorRmax,
+                                         fMirrorThick,
+                                         fMirrorSPhi,
+                                         fMirrorEPhi);
+        
+        G4LogicalVolume* logicMirror = new G4LogicalVolume(solidMirror,
+                                                           G4Material::GetMaterial("PMMA"),
+                                                           "Mirror");
+        
+        // Photon Energies for which mirror properties will be given
+        const G4int kEnergies = 3;
+        G4double the_photon_energies_[kEnergies] = {2.034*eV, 4.136*eV, 16*eV};
+        
+        // Optical Surface for mirror
+        G4OpticalSurface* mirror_surface_ =
+        new G4OpticalSurface("MirrorSurface", glisur, groundfrontpainted,
+                             dielectric_dielectric);
+        
+        // Reflectivity of mirror for each photon energy
+        G4double mirror_REFL[kEnergies] = {0.998, 0.998, 0.998};
+        
+        //Table of Surface Properties for Mirror
+        G4MaterialPropertiesTable* mirrorSurfaceProperty = new G4MaterialPropertiesTable();
+        mirrorSurfaceProperty->AddProperty("REFLECTIVITY", the_photon_energies_, mirror_REFL, kEnergies);
+        mirror_surface_->SetMaterialPropertiesTable(mirrorSurfaceProperty);
+        
+        // Place Mirror
+        new G4PVPlacement(0,                                 //no rotation
+                          G4ThreeVector(0.,0.,fMirrorPosZ),   //position
+                          logicMirror,                  //its logical volume
+                          "Mirror",                     //its name
+                          //                    Clad2_log,                   //its mother  volume
+                          fiber_log,                   //its mother  volume
+                          false,                        //no boolean operation
+                          0);                           //copy number
+        
+        // Create Skin Surface to link logical surface and optical surface
+        new G4LogicalSkinSurface("MirrorSurface",logicMirror,mirror_surface_);
+        
+        // Set Visualization Properties of the Mirror
+        G4VisAttributes* MirrorVis=new G4VisAttributes(G4Color(0.0,0.0,1.0));
+        MirrorVis->SetVisibility(true);
+        logicMirror->SetVisAttributes(MirrorVis);
 
-    // Photon Energies for which mirror properties will be given
-    const G4int kEnergies = 3;
-    G4double the_photon_energies_[kEnergies] = {2.034*eV, 4.136*eV, 16*eV};
-    
-    // Optical Surface for mirror
-    G4OpticalSurface* mirror_surface_ =
-    new G4OpticalSurface("MirrorSurface", glisur, groundfrontpainted,
-                         dielectric_dielectric);
-    
-    // Reflectivity of mirror for each photon energy
-    G4double mirror_REFL[kEnergies] = {0.998, 0.998, 0.998};
-    
-    //Table of Surface Properties for Mirror
-    G4MaterialPropertiesTable* mirrorSurfaceProperty = new G4MaterialPropertiesTable();
-    mirrorSurfaceProperty->AddProperty("REFLECTIVITY", the_photon_energies_, mirror_REFL, kEnergies);
-    mirror_surface_->SetMaterialPropertiesTable(mirrorSurfaceProperty);
-    
-    // Place Mirror
-    new G4PVPlacement(0,                                 //no rotation
-                      G4ThreeVector(0.,0.,fMirrorPosZ),   //position
-                      logicMirror,                  //its logical volume
-                      "Mirror",                     //its name
-                      fClad2_log,                   //its mother  volume
-                      false,                        //no boolean operation
-                      0);                           //copy number
-    
-    // Create Skin Surface to link logical surface and optical surface
-    new G4LogicalSkinSurface("MirrorSurface",logicMirror,mirror_surface_);
-
-    // Set Visualization Properties of the Mirror
-    G4VisAttributes* MirrorVis=new G4VisAttributes(G4Color(0.0,0.0,1.0));
-    MirrorVis->SetVisibility(true);
-    logicMirror->SetVisAttributes(MirrorVis);
-
+    }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -140,13 +144,14 @@ void NedmWLSFiber::CopyValues(){
     fClad2_sphi = fFiber_sphi;
     fClad2_ephi = fFiber_ephi;
     
-    fMirrorRmax  = fClad2_rmax;
+    //fMirrorRmax  = fClad2_rmax;
+    fMirrorRmax  = fFiber_rmax;
     fMirrorRmin  = 0.*cm;
-    fMirrorZ     = 1./2*mm;
+    fMirrorThick     = 1./2*mm;
     fMirrorSPhi  = fFiber_sphi;
     fMirrorEPhi  = fFiber_ephi;
     
-    fMirrorPosZ  = fFiber_z - fMirrorZ;
+    fMirrorPosZ  = -1*(fFiber_z - fMirrorThick);
     fMirrorReflectivity = 1;
 
     
