@@ -1,35 +1,5 @@
-//
-// ********************************************************************
-// * License and Disclaimer                                           *
-// *                                                                  *
-// * The  Geant4 software  is  copyright of the Copyright Holders  of *
-// * the Geant4 Collaboration.  It is provided  under  the terms  and *
-// * conditions of the Geant4 Software License,  included in the file *
-// * LICENSE and available at  http://cern.ch/geant4/license .  These *
-// * include a list of copyright holders.                             *
-// *                                                                  *
-// * Neither the authors of this software system, nor their employing *
-// * institutes,nor the agencies providing financial support for this *
-// * work  make  any representation or  warranty, express or implied, *
-// * regarding  this  software system or assume any liability for its *
-// * use.  Please see the license in the file  LICENSE  and URL above *
-// * for the full disclaimer and the limitation of liability.         *
-// *                                                                  *
-// * This  code  implementation is the result of  the  scientific and *
-// * technical work of the GEANT4 collaboration.                      *
-// * By using,  copying,  modifying or  distributing the software (or *
-// * any work based  on the software)  you  agree  to acknowledge its *
-// * use  in  resulting  scientific  publications,  and indicate your *
-// * acceptance of all terms of the Geant4 Software license.          *
-// ********************************************************************
-//
-// $Id: WLS_TestDetectorConstruction.cc 82853 2014-07-14 09:07:11Z gcosmo $
-//
-/// \file optical/WLS_Test/src/WLS_TestDetectorConstruction.cc
-/// \brief Implementation of the WLS_TestDetectorConstruction class
-//
-//
 #include "WLS_TestDetectorConstruction.hh"
+#include "WLS_TestMaterials.hh"
 #include "NedmWLSFiber.hh"
 
 #include "G4RunManager.hh"
@@ -60,7 +30,7 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 WLS_TestDetectorConstruction::WLS_TestDetectorConstruction()
-: fMPTPStyrene(NULL)
+:  fMaterials(NULL), fMPTPStyrene(NULL)
 {
     fExperimentalHall_box = NULL;
     fExperimentalHall_log = NULL;
@@ -77,11 +47,16 @@ WLS_TestDetectorConstruction::WLS_TestDetectorConstruction()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-WLS_TestDetectorConstruction::~WLS_TestDetectorConstruction() {}
+WLS_TestDetectorConstruction::~WLS_TestDetectorConstruction() {
+  if (fMaterials)         delete fMaterials;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void WLS_TestDetectorConstruction::DefineMaterials(){
+    fMaterials = WLS_TestMaterials::GetInstance();
+
+    
     G4double a;  // atomic mass
     G4double z;  // atomic number
     G4double density;
@@ -206,6 +181,7 @@ G4VPhysicalVolume* WLS_TestDetectorConstruction::Construct(){
     }
     
     DefineMaterials();
+
     return ConstructDetector();
 }
 
@@ -308,3 +284,9 @@ void WLS_TestDetectorConstruction::SetNFibers(G4int n) {
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+G4Material* WLS_TestDetectorConstruction::FindMaterial(G4String name) {
+    G4Material* material = G4Material::GetMaterial(name,true);
+    return material;
+}
+

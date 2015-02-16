@@ -9,6 +9,9 @@ class G4Sphere;
 
 class G4OpticalSurface;
 
+class WLS_TestMaterials;
+
+
 #include "G4Material.hh"
 #include "G4VisAttributes.hh"
 #include "G4RotationMatrix.hh"
@@ -37,8 +40,12 @@ class WLS_TestDetectorConstruction : public G4VUserDetectorConstruction
     //void SetMainScintYield(G4double );
     //void SetWLSScintYield(G4double );
 
+    G4Material* FindMaterial(G4String);
+
   private:
 
+    WLS_TestMaterials* fMaterials;
+    
     void DefineMaterials();
     G4VPhysicalVolume* ConstructDetector();
     
