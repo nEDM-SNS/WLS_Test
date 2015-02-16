@@ -43,6 +43,8 @@ void WLS_TestSteppingAction::UserSteppingAction(const G4Step* aStep)
             
             G4double cosTheta = aStep->GetTrack()->GetMomentumDirection().x();
             
+// If the following flag is set, the photons that reflect from the end of the tube propagate as normal
+#if 1
             if (p_out->GetPosition().x() > 0. && cosTheta > 0.) {
                 analysisManager->FillH1(0, 6);
                 analysisManager->FillH1(3, cosTheta);
@@ -58,6 +60,24 @@ void WLS_TestSteppingAction::UserSteppingAction(const G4Step* aStep)
             else {
                 // G4cout << "!!!!! Reflection !!!!!" << G4endl;
             }
+            
+// If the above Flag is not set, then any photon that hits the end of the fiber will be counted as detected and killed
+#else
+            if (p_out->GetPosition().x() > 0.) {
+                analysisManager->FillH1(0, 6);
+                analysisManager->FillH1(3, cosTheta);
+                aStep->GetTrack()->SetTrackStatus(fStopAndKill);
+            }
+            else {
+                analysisManager->FillH1(0, 7);
+                analysisManager->FillH1(4, cosTheta);
+                aStep->GetTrack()->SetTrackStatus(fStopAndKill);
+                
+            }
+            
+#endif
+            
+            // For debugging above
             /*
             G4cout << "Position: " << p_out->GetPosition() << G4endl;
             G4cout << "PreStepMomDir: " <<  p_in->GetMomentumDirection() << G4endl;
