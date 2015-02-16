@@ -10,4 +10,4 @@ Source -
 /run/beamOn 10000
 
 Readout - 
-Any photon hitting the edge of the fiber core is recorded and then killed.
+Any photon hitting the end of the fiber core is recorded and then killed.
