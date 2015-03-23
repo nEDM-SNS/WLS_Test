@@ -13,8 +13,8 @@ void WLS_TestSteppingAction::UserSteppingAction(const G4Step* aStep)
     
     // Kill tracks at first step for analyzing input
 #if 0
-    aStep->GetTrack()->SetTrackStatus(fStopAndKill);
-    return;
+    //aStep->GetTrack()->SetTrackStatus(fStopAndKill);
+    //return;
 #endif
 
     
@@ -54,18 +54,55 @@ void WLS_TestSteppingAction::UserSteppingAction(const G4Step* aStep)
             }
             
 // If the above Flag is not set, then any photon that hits the end of the fiber will be counted as detected and killed
-#else
+#elseif 0
             if (p_out->GetPosition().x() > 0.) {
                 analysisManager->FillH1(0, 6);
-                analysisManager->FillH1(3, cosTheta);
+                if (cosTheta > 0.) {
+                    analysisManager->FillH1(3, cosTheta);
+                }
+                else
+                {
+                    cosTheta = p_in->GetMomentumDirection().x();
+                    analysisManager->FillH1(3, cosTheta);
+                }
                 aStep->GetTrack()->SetTrackStatus(fStopAndKill);
             }
             else {
                 analysisManager->FillH1(0, 7);
-                analysisManager->FillH1(4, cosTheta);
+                if (cosTheta < 0.) {
+                    analysisManager->FillH1(4, cosTheta);
+                }
+                else
+                {
+                    cosTheta = p_in->GetMomentumDirection().x();
+                    analysisManager->FillH1(4, cosTheta);
+                }
                 aStep->GetTrack()->SetTrackStatus(fStopAndKill);
                 
             }
+#else
+//New default behavior is to record all photons that reach the end of the fiber, and read out the angle with which they HIT the fiber.  This should mimick optical coupling much better.
+            cosTheta = p_in->GetMomentumDirection().x();
+            
+            if (p_out->GetPosition().x() > 0.) {
+                analysisManager->FillH1(0, 6);
+                analysisManager->FillH1(3, cosTheta);
+                aStep->GetTrack()->SetTrackStatus(fStopAndKill);
+                
+            }
+            else if (p_out->GetPosition().x() < 0.)
+            {
+                analysisManager->FillH1(0, 7);
+                analysisManager->FillH1(4, cosTheta);
+                aStep->GetTrack()->SetTrackStatus(fStopAndKill);
+            }
+            
+            else
+            {
+                G4cout << "!!! Recorded Photon not exiting Fiber End !!!!" << G4endl;
+            }
+
+            
             
 #endif
             

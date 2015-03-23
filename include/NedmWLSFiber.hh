@@ -20,6 +20,8 @@ class NedmWLSFiber : public G4PVPlacement
                 G4bool pMany,
                 G4int pCopyNo,
                  G4bool Reflector=false);
+    
+    G4Material* FindMaterial(G4String);
 
   private:
 

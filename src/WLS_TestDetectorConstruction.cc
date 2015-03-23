@@ -30,16 +30,13 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 WLS_TestDetectorConstruction::WLS_TestDetectorConstruction()
-:  fMaterials(NULL), fMPTPStyrene(NULL)
+:
+//fMaterials(NULL),
+fMPTPStyrene(NULL)
 {
     fExperimentalHall_box = NULL;
     fExperimentalHall_log = NULL;
     fExperimentalHall_phys = NULL;
-    
-    fAir = fVacuum = NULL;
-    fPstyrene = fPMMA = fPethylene1 = fPethylene2 = NULL;
-    
-    //fN = fO = fC = fH = NULL;
     
     SetDefaults();
     
@@ -54,13 +51,18 @@ WLS_TestDetectorConstruction::~WLS_TestDetectorConstruction() {
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void WLS_TestDetectorConstruction::DefineMaterials(){
-    //fMaterials = WLS_TestMaterials::GetInstance();
 
+#if 0
+    fMaterials = WLS_TestMaterials::GetInstance();
+
+#else
+
+    fMaterials = WLS_TestMaterials::GetInstance();
     
     G4double a;  // atomic mass
     G4double z;  // atomic number
     G4double density;
-    G4int nelements;
+    //G4int nelements;
     
     
     G4int polyPMMA = 1;
@@ -91,7 +93,7 @@ void WLS_TestDetectorConstruction::DefineMaterials(){
     fPstyrene->AddElement(fC, 8);
     fPstyrene->AddElement(fH, 8);
     //Fiber(PMMA)
-    fPMMA = new G4Material("PMMA", density=1190*kg/m3,3);
+    fPMMA = new G4Material("PMMA_OLD", density=1190*kg/m3,3);
     fPMMA->AddElement(fH,nH_PMMA);
     fPMMA->AddElement(fC,nC_PMMA);
     fPMMA->AddElement(fO,2);
@@ -143,13 +145,14 @@ void WLS_TestDetectorConstruction::DefineMaterials(){
     assert(sizeof(AbsFiber) == sizeof(wls_Energy));
     G4double EmissionFib[]={1.0, 1.0, 0.0, 0.0};
     assert(sizeof(EmissionFib) == sizeof(wls_Energy));
+    
     G4MaterialPropertiesTable* fiberProperty = new G4MaterialPropertiesTable();
     fiberProperty->AddProperty("RINDEX",wls_Energy,RefractiveIndexFiber,wlsnum);
     fiberProperty->AddProperty("WLSABSLENGTH",wls_Energy,AbsFiber,wlsnum);
     fiberProperty->AddProperty("WLSCOMPONENT",wls_Energy,EmissionFib,wlsnum);
     fiberProperty->AddConstProperty("WLSTIMECONSTANT", 0.5*ns);
     fPMMA->SetMaterialPropertiesTable(fiberProperty);
-    
+     
     G4double RefractiveIndexClad1[]={ 1.49, 1.49, 1.49, 1.49};
     assert(sizeof(RefractiveIndexClad1) == sizeof(wls_Energy));
     G4MaterialPropertiesTable* clad1Property = new G4MaterialPropertiesTable();
@@ -163,7 +166,7 @@ void WLS_TestDetectorConstruction::DefineMaterials(){
     clad2Property->AddProperty("RINDEX",wls_Energy,RefractiveIndexClad2,wlsnum);
     clad2Property->AddProperty("ABSLENGTH",wls_Energy,AbsFiber,wlsnum);
     fPethylene2->SetMaterialPropertiesTable(clad2Property);
-    
+#endif
     
 }
 
@@ -198,9 +201,10 @@ G4VPhysicalVolume* WLS_TestDetectorConstruction::ConstructDetector()
     fExperimentalHall_box
     = new G4Box("expHall_box",expHall_x,expHall_y,expHall_z);
     fExperimentalHall_log = new G4LogicalVolume(fExperimentalHall_box,
-                                                fVacuum,"expHall_log",0,0,0);
-    fExperimentalHall_phys = new G4PVPlacement(0,G4ThreeVector(),
-                                               fExperimentalHall_log,"expHall",0,false,0);
+                                                FindMaterial("G4_AIR"),
+                                                //FindMaterial("Vacuum"),
+                                                "expHall_log",0,0,0);
+    fExperimentalHall_phys = new G4PVPlacement(0,G4ThreeVector(),fExperimentalHall_log,"expHall",0,false,0);
     
     fExperimentalHall_log->SetVisAttributes(G4VisAttributes::Invisible);
     
@@ -208,15 +212,15 @@ G4VPhysicalVolume* WLS_TestDetectorConstruction::ConstructDetector()
     G4double spacing = 1.*cm;
     
     // Demonstration of rotation - use if needed
-    G4RotationMatrix* rm = new G4RotationMatrix();
-    rm->rotateY(-90*deg);
+    G4RotationMatrix* rotY = new G4RotationMatrix();
+    rotY->rotateY(-90*deg);
     
     // Switch for fiber reflector
     G4bool fibRefl = false;
     //Place fibers
     for(G4int i=0;i<fNfibers;i++){
         G4double Y=-(spacing)*(fNfibers-1)*0.5 + i*spacing;
-        new NedmWLSFiber(rm,G4ThreeVector(0.,Y,0.),fExperimentalHall_log,false,0,fibRefl);
+        new NedmWLSFiber(rotY,G4ThreeVector(0.,Y,0.),fExperimentalHall_log,false,0,fibRefl);
     }
     
     return fExperimentalHall_phys;

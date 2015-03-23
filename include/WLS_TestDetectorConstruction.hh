@@ -55,6 +55,7 @@ class WLS_TestDetectorConstruction : public G4VUserDetectorConstruction
     G4LogicalVolume* fExperimentalHall_log;
     G4VPhysicalVolume* fExperimentalHall_phys;
 
+
     //Materials & Elements
     //G4Material* fAl;
     G4Element* fN;
@@ -68,6 +69,7 @@ class WLS_TestDetectorConstruction : public G4VUserDetectorConstruction
     G4Material* fPMMA;
     G4Material* fPethylene1;
     G4Material* fPethylene2;
+
     
     //Geometry
     G4int fNfibers;
