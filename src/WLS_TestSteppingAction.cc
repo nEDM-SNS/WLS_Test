@@ -13,8 +13,8 @@ void WLS_TestSteppingAction::UserSteppingAction(const G4Step* aStep)
     
     // Kill tracks at first step for analyzing input
 #if 0
-    //aStep->GetTrack()->SetTrackStatus(fStopAndKill);
-    //return;
+    aStep->GetTrack()->SetTrackStatus(fStopAndKill);
+    return;
 #endif
 
     

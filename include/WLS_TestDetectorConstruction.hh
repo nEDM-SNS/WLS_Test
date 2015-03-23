@@ -55,21 +55,6 @@ class WLS_TestDetectorConstruction : public G4VUserDetectorConstruction
     G4LogicalVolume* fExperimentalHall_log;
     G4VPhysicalVolume* fExperimentalHall_phys;
 
-
-    //Materials & Elements
-    //G4Material* fAl;
-    G4Element* fN;
-    G4Element* fO;
-    G4Material* fAir;
-    G4Material* fVacuum;
-    G4Element* fC;
-    G4Element* fH;
-    //G4Material* fGlass;
-    G4Material* fPstyrene;
-    G4Material* fPMMA;
-    G4Material* fPethylene1;
-    G4Material* fPethylene2;
-
     
     //Geometry
     G4int fNfibers;
