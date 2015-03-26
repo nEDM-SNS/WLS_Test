@@ -238,6 +238,13 @@ void WLS_TestMaterials::CreateMaterials()
     
     assert(sizeof(refractiveIndexWLSfiber) == sizeof(photonEnergy));
 
+    G4double absfiber[] =
+    {1.*mm, 1.*mm,1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm,
+        1.*mm, 1.*mm,1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm,
+        1.*mm, 1.*mm,1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm,
+        1.*mm, 1.*mm,1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm,
+        1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm};
+    
 #if 1
     G4double absWLSfiber[] =
     {5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,
@@ -266,11 +273,12 @@ void WLS_TestMaterials::CreateMaterials()
     
     assert(sizeof(emissionFib) == sizeof(photonEnergy));
     
+    
     // Add entries into properties table
     G4MaterialPropertiesTable* mptWLSfiber = new G4MaterialPropertiesTable();
     mptWLSfiber->
     AddProperty("RINDEX",photonEnergy,refractiveIndexWLSfiber,nEntries);
-    // mptWLSfiber->AddProperty("ABSLENGTH",photonEnergy,absWLSfiber,nEntries);
+    mptWLSfiber->AddProperty("ABSLENGTH",photonEnergy,absfiber,nEntries);
     mptWLSfiber->AddProperty("WLSABSLENGTH",photonEnergy,absWLSfiber,nEntries);
     mptWLSfiber->AddProperty("WLSCOMPONENT",photonEnergy,emissionFib,nEntries);
     mptWLSfiber->AddConstProperty("WLSTIMECONSTANT", 0.5*ns);
