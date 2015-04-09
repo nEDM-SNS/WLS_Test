@@ -239,11 +239,11 @@ void WLS_TestMaterials::CreateMaterials()
     assert(sizeof(refractiveIndexWLSfiber) == sizeof(photonEnergy));
 
     G4double absfiber[] =
-    {1.*mm, 1.*mm,1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm,
-        1.*mm, 1.*mm,1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm,
-        1.*mm, 1.*mm,1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm,
-        1.*mm, 1.*mm,1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm,
-        1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm};
+    {20.*m, 20.*m,20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
+        20.*m, 20.*m,20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
+        20.*m, 20.*m,20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
+        20.*m, 20.*m,20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
+        20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m};
     
 #if 1
     G4double absWLSfiber[] =

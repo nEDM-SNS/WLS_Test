@@ -23,7 +23,8 @@ void WLS_TestSteppingAction::UserSteppingAction(const G4Step* aStep)
     const G4StepPoint *p_out = aStep->GetPostStepPoint();
 
     // Ignore 1st and last step
-    if (aStep->GetTrack()->GetCurrentStepNumber() != 1 && p_out->GetStepStatus()!= fWorldBoundary) {
+//    if (aStep->GetTrack()->GetCurrentStepNumber() != 1 && p_out->GetStepStatus()!= fWorldBoundary) {
+    if (p_out->GetStepStatus()!= fWorldBoundary) {
         G4LogicalVolume* inVol;
         inVol = p_in->GetTouchableHandle()->GetVolume()->GetLogicalVolume();
         
