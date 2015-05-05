@@ -24,6 +24,17 @@ NedmWLSFiber::NedmWLSFiber(G4RotationMatrix *pRot,
 {
     CopyValues();
     
+    // Boundary Surface Properties
+    G4OpticalSurface* opSurface = NULL;
+    
+    if (fSurfaceRoughness < 1.)
+        opSurface = new G4OpticalSurface("RoughSurface",          // Surface Name
+                                         glisur,                  // SetModel
+                                         ground,                  // SetFinish
+                                         dielectric_dielectric,   // SetType
+                                         fSurfaceRoughness);      // SetPolish
+    
+    
     G4RotationMatrix* zRot = new G4RotationMatrix;
     zRot->rotateZ(90*deg);
     
@@ -62,10 +73,15 @@ NedmWLSFiber::NedmWLSFiber(G4RotationMatrix *pRot,
     new G4PVPlacement(0,G4ThreeVector(0.,0.,0.),clad1_log,
                       "Cladding1",fClad2_log,false,0);
     
+    // Place the rough surface only if needed
+    if (opSurface) {
+        new G4LogicalSkinSurface("Clad2_Surface", fClad2_log, opSurface);
+    }
+    
     G4VisAttributes* FiberVis=new G4VisAttributes(G4Color(0.0,1.0,0.0));
     FiberVis->SetVisibility(true);
     fClad2_log->SetVisAttributes(FiberVis);
-
+    
     
     SetLogicalVolume(fClad2_log);
     
@@ -114,7 +130,7 @@ NedmWLSFiber::NedmWLSFiber(G4RotationMatrix *pRot,
         G4VisAttributes* MirrorVis=new G4VisAttributes(G4Color(0.0,0.0,1.0));
         MirrorVis->SetVisibility(true);
         logicMirror->SetVisAttributes(MirrorVis);
-
+        
     }
 }
 
@@ -124,10 +140,12 @@ void NedmWLSFiber::CopyValues(){
     
     fFiber_rmin = 0.00*cm;
     fFiber_rmax = 0.088/2*cm;
-//  fFiber_z    = 112./2*cm;
+    //  fFiber_z    = 112./2*cm;
     fFiber_z    = 20./2*cm;
     fFiber_sphi = 0.00*deg;
     fFiber_ephi = 360.*deg;
+    
+    fSurfaceRoughness = 0.9;
     
     fClad1_rmin = 0.;// fFiber_rmax;
     fClad1_rmax = fFiber_rmax + 0.003*cm;
@@ -152,7 +170,7 @@ void NedmWLSFiber::CopyValues(){
     
     fMirrorPosZ  = -1*(fFiber_z - fMirrorThick);
     fMirrorReflectivity = 1;
-
+    
     
 }
 

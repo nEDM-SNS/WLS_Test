@@ -34,6 +34,7 @@ class NedmWLSFiber : public G4PVPlacement
     G4double fFiber_z;
     G4double fFiber_sphi;
     G4double fFiber_ephi;
+    G4double fSurfaceRoughness;
 
     G4double fClad1_rmin;
     G4double fClad1_rmax;    

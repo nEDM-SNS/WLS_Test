@@ -37,8 +37,14 @@ class WLS_TestDetectorConstruction : public G4VUserDetectorConstruction
     void SetNFibers(G4int n);
     G4int GetNFibers(){return fNfibers;}
 
-    //void SetMainScintYield(G4double );
-    //void SetWLSScintYield(G4double );
+    void SetCellWallOn(G4bool b);
+    G4bool GetCellWallOn(){return fCellWallOn;}
+    
+    void SetEmbeddedFiberOn(G4bool b);
+    G4bool GetEmbeddedFiberOn(){return fEmbeddedFiber;}
+
+    void SetFibeReflrOn(G4bool b);
+    G4bool GetFiberReflOn(){return fEmbeddedFiber;}
 
     G4Material* FindMaterial(G4String);
 
@@ -54,12 +60,14 @@ class WLS_TestDetectorConstruction : public G4VUserDetectorConstruction
     G4Box* fExperimentalHall_box;
     G4LogicalVolume* fExperimentalHall_log;
     G4VPhysicalVolume* fExperimentalHall_phys;
+    
+    G4bool fCellWallOn;
+    G4bool fEmbeddedFiber;
+    G4bool fibRefl;
 
     
     //Geometry
     G4int fNfibers;
-
-    G4MaterialPropertiesTable* fMPTPStyrene;
 
 
 };

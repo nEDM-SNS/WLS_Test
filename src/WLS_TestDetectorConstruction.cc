@@ -26,13 +26,10 @@
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
 
-//G4bool WLS_TestDetectorConstruction::fSphereOn = true;
-
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 WLS_TestDetectorConstruction::WLS_TestDetectorConstruction()
 :
-fMaterials(NULL),
-fMPTPStyrene(NULL)
+fMaterials(NULL)
 {
     fExperimentalHall_box = NULL;
     fExperimentalHall_log = NULL;
@@ -99,8 +96,21 @@ G4VPhysicalVolume* WLS_TestDetectorConstruction::ConstructDetector()
     G4RotationMatrix* rotY = new G4RotationMatrix();
     rotY->rotateY(-90*deg);
     
-    // Switch for fiber reflector
-    G4bool fibRefl = false;
+    // Create Cell Wall
+    if (fCellWallOn)
+    {
+        if (fEmbeddedFiber)
+        {
+            
+        }
+        
+        else
+        {
+            
+        }
+    }
+    
+
     //Place fibers
     for(G4int i=0;i<fNfibers;i++){
         G4double Y=-(spacing)*(fNfibers-1)*0.5 + i*spacing;
@@ -121,9 +131,12 @@ void WLS_TestDetectorConstruction::ConstructSDandField() {
 void WLS_TestDetectorConstruction::SetDefaults() {
     
     //Resets to default values
-    fNfibers=1;
+
+    fCellWallOn = false;
+    fEmbeddedFiber = false;
+    fibRefl = false;
     
-    if(fMPTPStyrene)fMPTPStyrene->AddConstProperty("SCINTILLATIONYIELD",10./keV);
+    fNfibers=1;
     
     G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
@@ -132,6 +145,21 @@ void WLS_TestDetectorConstruction::SetDefaults() {
 
 void WLS_TestDetectorConstruction::SetNFibers(G4int n) {
     fNfibers=n;
+    G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+
+void WLS_TestDetectorConstruction::SetCellWallOn(G4bool b) {
+    fCellWallOn=b;
+    G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+
+void WLS_TestDetectorConstruction::SetEmbeddedFiberOn(G4bool b) {
+    fEmbeddedFiber=b;
+    G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+
+void WLS_TestDetectorConstruction::SetFibeReflrOn(G4bool b) {
+    fibRefl=b;
     G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 
