@@ -1,5 +1,6 @@
 5/5/2015
-1) Put in a single attenuation length (7.5m ) w/ no surface rougness and vary fiber length to reproduce total trapping efficiency in MJD paper - Dallas.
+1) Put in a single attenuation length (7.5m ) w/ no surface rougness and vary fiber length to reproduce
+   total trapping efficiency in MJD paper - Dallas.
 2) Tune SurfaceRoughness parameter in fiber definition to match MJD paper - Dallas.
 
 
