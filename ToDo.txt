@@ -2,7 +2,8 @@
 1) Put in a single attenuation length (7.5m ) w/ no surface rougness and vary fiber length to reproduce
    total trapping efficiency in MJD paper - Dallas.
 2) Tune SurfaceRoughness parameter in fiber definition to match MJD paper - Dallas.
-
+3) Fix nEDMCellSide implementation w/ embedded fibers option.
+4) Create messenger class for command line control of detector properties.
 
 OLD
 1) Implement PMT detectors - Jed
