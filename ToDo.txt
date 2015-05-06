@@ -1,3 +1,9 @@
+5/5/2015
+1) Put in a single attenuation length (7.5m ) w/ no surface rougness and vary fiber length to reproduce total trapping efficiency in MJD paper - Dallas.
+2) Tune SurfaceRoughness parameter in fiber definition to match MJD paper - Dallas.
+
+
+OLD
 1) Implement PMT detectors - Jed
 2) Implement Blue Light Source - Jed or Dallas
 3) Run Trapping Efficiency Test on Fibers - Dallas
@@ -17,11 +23,3 @@ List of Parameters to determine
 4) Absorption properties of Fiber
 
 Questions:
-1) Currently, the materials for the fiber are core=PMMA, Clad1=PolyEthylene1, 
-Clad2=PolyEthylene2.  This was taken from the LXe Geant4 example. The data sheet from 
-Kuraray showed core=PS, Clad1=PMMA, Clad2=FP.  Jed simply changed the indexes of 
-refraction to match the Kuraray data sheet.  Is there a reason to change the materials to
-match the data sheet, or is index of refraction the only important property? If we change 
-them, what should be used for the FP (Florinated Polymer)?  If we leave it, will this 
-cause confusion later on (i.e. will we have to explain to 50 different people why the 
-index of refraction is all that matters)?
