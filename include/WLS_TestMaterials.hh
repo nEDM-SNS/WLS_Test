@@ -33,6 +33,7 @@ class WLS_TestMaterials
     G4Material*        fPethylene;
     G4Material*        fFPethylene;
     G4Material*        fPolystyrene;
+    G4Material*        fTPBDopedPS;
     G4Material*        fSilicone;
     G4Material*        fCoating;
 

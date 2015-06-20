@@ -2,12 +2,6 @@
 #define NedmWLSFiber_H 1
 
 #include "G4PVPlacement.hh"
-#include "G4Box.hh"
-#include "G4Tubs.hh"
-#include "G4Sphere.hh"
-#include "G4Material.hh"
-#include "G4LogicalVolume.hh"
-#include "G4OpticalSurface.hh"
 
 
 class NedmWLSFiber : public G4PVPlacement
