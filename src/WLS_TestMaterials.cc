@@ -140,7 +140,8 @@ void WLS_TestMaterials::CreateMaterials()
     
     elements.clear();
     natoms.clear();
-    
+
+    /*
     //--------------------------------------------------
     // Tetraphenyl butadiene (TPB)
     //--------------------------------------------------
@@ -168,7 +169,7 @@ void WLS_TestMaterials::CreateMaterials()
     
     fCoating->AddMaterial(TPB,         fractionmass = 2*perCent);
     fCoating->AddMaterial(fPolystyrene, fractionmass = 98*perCent);
-
+*/
     //--------------------------------------------------
     // Silicone (Template for Optical Grease)
     //--------------------------------------------------
