@@ -44,7 +44,7 @@ NedmCellSide::NedmCellSide(G4RotationMatrix* pRot,
     new G4LogicalVolume(cellSide_solid,G4Material::GetMaterial("PMMA"),
                         "Cell");
 
-    G4VisAttributes* cellVis=new G4VisAttributes(G4Color(1.0,1.0,1.0));
+    G4VisAttributes* cellVis=new G4VisAttributes(G4Color(0.8,0.8,0.8));
     cellVis->SetVisibility(true);
     fCellSide_log->SetVisAttributes(cellVis);
 
@@ -57,7 +57,7 @@ NedmCellSide::NedmCellSide(G4RotationMatrix* pRot,
 
 
 
-G4VPhysicalVolume* NedmCellSide::ConstructTPBInterface() {
+void NedmCellSide::ConstructTPBInterface() {
     
     G4Box* TPBInterface_solid = new G4Box("TPBInterface",
                                           fCell_Size.x(),
@@ -68,15 +68,16 @@ G4VPhysicalVolume* NedmCellSide::ConstructTPBInterface() {
 
     G4ThreeVector TPBInterface_pos = G4ThreeVector(0.,fCell_Size.y()-fTPB_Thickness,0.);
     
-    G4VPhysicalVolume* TPBInterface_phys
-    = new G4PVPlacement(0,TPBInterface_pos,
+    new G4PVPlacement(0,TPBInterface_pos,
                         TPBInterface_log,
                         "TPBInterface",
                         fCellSide_log,false,0);
     
+    G4VisAttributes* tpbVis=new G4VisAttributes(G4Color(1.0,0.0,1.0));
+    tpbVis->SetVisibility(true);
+    TPBInterface_log->SetVisAttributes(tpbVis);
+
     
-    
-    return TPBInterface_phys;
 }
 
 

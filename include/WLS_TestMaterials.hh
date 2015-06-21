@@ -30,6 +30,7 @@ class WLS_TestMaterials
     G4Material*        fAir;
 
     G4Material*        fPMMA;
+    G4Material*        fWLSPMMA;
     G4Material*        fPethylene;
     G4Material*        fFPethylene;
     G4Material*        fPolystyrene;

@@ -78,7 +78,6 @@ G4VParticleChange* NedmOpTPB::PostStepDoIt(const G4Track& aTrack, const G4Step& 
         
         conversionEfficiency = aMaterialPropertiesTable->GetConstProperty("TPBCONVERSIONEFFICIENCY");
         
-        G4cout << "TPB process from Material not surface!!!!" << G4endl;
         
     } else {
         //Now we check any optical surfaces associated with this boundary

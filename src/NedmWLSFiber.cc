@@ -40,7 +40,7 @@ NedmWLSFiber::NedmWLSFiber(G4RotationMatrix *pRot,
     new G4Tubs("Fiber",fFiber_rmin,fFiber_rmax,fFiber_z,fFiber_sphi,fFiber_ephi);
     
     G4LogicalVolume* fiber_log =
-    new G4LogicalVolume(fiber_tube,G4Material::GetMaterial("PMMA"),
+    new G4LogicalVolume(fiber_tube,G4Material::GetMaterial("WLSPMMA"),
                         "Fiber",0,0,0);
     
     // Cladding (first layer)
@@ -132,8 +132,8 @@ void NedmWLSFiber::CopyValues(){
     
     fFiber_rmin = 0.00*cm;
     fFiber_rmax = 0.088/2*cm;
-//  fFiber_z    = 112./2*cm;
-    fFiber_z    = 20./2*cm;
+    fFiber_z    = 20.64*cm;
+//  fFiber_z    = 20./2*cm;
     fFiber_sphi = 0.00*deg;
     fFiber_ephi = 360.*deg;
     

@@ -22,9 +22,7 @@ class NedmCellSide : public G4PVPlacement {
     
     static G4LogicalVolume* fCellSide_log;
 
-    G4VPhysicalVolume* ConstructTPBInterface();
-    void ConstructSurfaceVolumes();
-    G4VPhysicalVolume* ConstructRearSurface();
+    void ConstructTPBInterface();
     
     G4ThreeVector fCell_Size;
     G4double fTPB_Thickness;

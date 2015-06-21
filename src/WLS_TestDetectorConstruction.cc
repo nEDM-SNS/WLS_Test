@@ -43,7 +43,7 @@ fMaterials(NULL)
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 WLS_TestDetectorConstruction::~WLS_TestDetectorConstruction() {
-  if (fMaterials)         delete fMaterials;
+    if (fMaterials)         delete fMaterials;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -65,8 +65,8 @@ G4VPhysicalVolume* WLS_TestDetectorConstruction::Construct(){
     
     //DefineMaterials();
     fMaterials = WLS_TestMaterials::GetInstance();
-
-
+    
+    
     return ConstructDetector();
 }
 
@@ -91,7 +91,7 @@ G4VPhysicalVolume* WLS_TestDetectorConstruction::ConstructDetector()
     fExperimentalHall_log->SetVisAttributes(G4VisAttributes::Invisible);
     
     // Placeholder - redifine if using more than 1 fiber
-    G4double spacing = 1.*cm;
+    G4double spacing = 0.101*cm;
     
     // Demonstration of rotation - use if needed
     G4RotationMatrix* rotY = new G4RotationMatrix();
@@ -107,11 +107,17 @@ G4VPhysicalVolume* WLS_TestDetectorConstruction::ConstructDetector()
         
         else
         {
-            new NedmCellSide(rotY,G4ThreeVector(0.,0.,0.),fExperimentalHall_log,0);
+            new NedmCellSide(0,G4ThreeVector(0.,0.,0.),fExperimentalHall_log,0);
+ 
+            for(G4int i=0;i<fNfibers;i++){
+                G4double X_pos=-(spacing)*(fNfibers-1)*0.5 + i*spacing;
+                new NedmWLSFiber(0,G4ThreeVector(X_pos,-1*(0.635+0.088/2+.1)*cm,0.),fExperimentalHall_log,false,0,fibRefl);
+            }
+            
         }
     }
     
-
+    
     else{
         
         //Place fibers only
@@ -128,19 +134,19 @@ G4VPhysicalVolume* WLS_TestDetectorConstruction::ConstructDetector()
 
 void WLS_TestDetectorConstruction::ConstructSDandField() {
     
-    }
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void WLS_TestDetectorConstruction::SetDefaults() {
     
     //Resets to default values
-
-    fCellWallOn = false;
+    
+    fCellWallOn = true;
     fEmbeddedFiber = false;
     fibRefl = false;
     
-    fNfibers=1;
+    fNfibers=98;
     
     G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
