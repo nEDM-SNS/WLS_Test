@@ -65,8 +65,13 @@ G4VPhysicalVolume* WLS_TestDetectorConstruction::Construct(){
     
     //DefineMaterials();
     fMaterials = WLS_TestMaterials::GetInstance();
+<<<<<<< HEAD
     
     
+=======
+
+
+>>>>>>> master
     return ConstructDetector();
 }
 
@@ -107,6 +112,7 @@ G4VPhysicalVolume* WLS_TestDetectorConstruction::ConstructDetector()
         
         else
         {
+<<<<<<< HEAD
             new NedmCellSide(0,G4ThreeVector(0.,0.,0.),fExperimentalHall_log,0);
  
             for(G4int i=0;i<fNfibers;i++){
@@ -125,6 +131,17 @@ G4VPhysicalVolume* WLS_TestDetectorConstruction::ConstructDetector()
             G4double Y=-(spacing)*(fNfibers-1)*0.5 + i*spacing;
             new NedmWLSFiber(rotY,G4ThreeVector(0.,Y,0.),fExperimentalHall_log,false,0,fibRefl);
         }
+=======
+            
+        }
+    }
+    
+
+    //Place fibers
+    for(G4int i=0;i<fNfibers;i++){
+        G4double Y=-(spacing)*(fNfibers-1)*0.5 + i*spacing;
+        new NedmWLSFiber(rotY,G4ThreeVector(0.,Y,0.),fExperimentalHall_log,false,0,fibRefl);
+>>>>>>> master
     }
     
     return fExperimentalHall_phys;
@@ -141,12 +158,21 @@ void WLS_TestDetectorConstruction::ConstructSDandField() {
 void WLS_TestDetectorConstruction::SetDefaults() {
     
     //Resets to default values
+<<<<<<< HEAD
     
     fCellWallOn = true;
     fEmbeddedFiber = false;
     fibRefl = false;
     
     fNfibers=98;
+=======
+
+    fCellWallOn = false;
+    fEmbeddedFiber = false;
+    fibRefl = false;
+    
+    fNfibers=1;
+>>>>>>> master
     
     G4RunManager::GetRunManager()->ReinitializeGeometry();
 }

@@ -24,7 +24,11 @@ NedmWLSFiber::NedmWLSFiber(G4RotationMatrix *pRot,
                            G4bool Reflector)
 :G4PVPlacement(pRot,tlate,
                new G4LogicalVolume(new G4Box("temp",1,1,1),
+<<<<<<< HEAD
                                    G4Material::GetMaterial("G4_AIR"),
+=======
+                                   FindMaterial("G4_AIR"),
+>>>>>>> master
                                    "temp",0,0,0),
                "Cladding2",pMotherLogical,pMany,pCopyNo)
 {
@@ -50,7 +54,13 @@ NedmWLSFiber::NedmWLSFiber(G4RotationMatrix *pRot,
     new G4Tubs("Fiber",fFiber_rmin,fFiber_rmax,fFiber_z,fFiber_sphi,fFiber_ephi);
     
     G4LogicalVolume* fiber_log =
+<<<<<<< HEAD
     new G4LogicalVolume(fiber_tube,G4Material::GetMaterial("WLSPMMA"),
+=======
+    new G4LogicalVolume(fiber_tube,
+                        //FindMaterial("PMMA_OLD"),
+                        FindMaterial("PMMA"),
+>>>>>>> master
                         "Fiber",0,0,0);
    
     // Cladding (first layer)
@@ -60,8 +70,12 @@ NedmWLSFiber::NedmWLSFiber(G4RotationMatrix *pRot,
                fClad1_ephi);
     
     G4LogicalVolume* clad1_log =
+<<<<<<< HEAD
     new G4LogicalVolume(clad1_tube,G4Material::GetMaterial("Pethylene"),
                         "Cladding1",0,0,0);
+=======
+    new G4LogicalVolume(clad1_tube,FindMaterial("Pethylene"),"Cladding1",0,0,0);
+>>>>>>> master
     
     // Cladding (second layer)
     //
@@ -70,7 +84,11 @@ NedmWLSFiber::NedmWLSFiber(G4RotationMatrix *pRot,
                fClad2_ephi);
     
     fClad2_log =
+<<<<<<< HEAD
     new G4LogicalVolume(clad2_tube,G4Material::GetMaterial("FPethylene"),
+=======
+    new G4LogicalVolume(clad2_tube,FindMaterial("FPethylene"),
+>>>>>>> master
                         "Cladding2",0,0,0);
     
     new G4PVPlacement(0,G4ThreeVector(0.,0.,0.),fiber_log,
@@ -99,7 +117,11 @@ NedmWLSFiber::NedmWLSFiber(G4RotationMatrix *pRot,
                                          fMirrorSPhi,
                                          fMirrorEPhi);
         
+<<<<<<< HEAD
         G4LogicalVolume* logicMirror = new G4LogicalVolume(solidMirror,G4Material::GetMaterial("PMMA"),"Mirror");
+=======
+        G4LogicalVolume* logicMirror = new G4LogicalVolume(solidMirror,FindMaterial("PMMA"),"Mirror");
+>>>>>>> master
         
         // Photon Energies for which mirror properties will be given
         const G4int kEnergies = 3;
@@ -179,3 +201,12 @@ void NedmWLSFiber::CopyValues(){
     
 }
 
+<<<<<<< HEAD
+=======
+G4Material* NedmWLSFiber::FindMaterial(G4String name) {
+    G4Material* material = G4Material::GetMaterial(name,true);
+    return material;
+}
+
+
+>>>>>>> master
