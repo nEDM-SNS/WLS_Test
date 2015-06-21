@@ -22,12 +22,18 @@ void WLS_TestTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
     else if(aTrack->GetParentID()>0){
         // particle is secondary
         
-        if(aTrack->GetCreatorProcess()->GetProcessName()=="OpWLS")
+        if(aTrack->GetCreatorProcess()->GetProcessName()=="OpTPB")
         {
             analysisManager->FillH1(0, 2);
+        }
+        
+        else if(aTrack->GetCreatorProcess()->GetProcessName()=="OpWLS")
+        {
+            analysisManager->FillH1(0, 3);
             analysisManager->FillH1(1, h_Planck*c_light/aTrack->GetDynamicParticle()->GetKineticEnergy()/nm);
             analysisManager->FillH1(2, aTrack->GetDynamicParticle()->GetKineticEnergy()/eV);
         }
+
         
     }
     
