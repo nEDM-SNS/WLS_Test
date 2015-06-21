@@ -19,7 +19,7 @@ void NedmDetectorParameters::SetDefaults() {
     
     
     cell_wall_on_ = true;
-    embedded_fibers_ = false;
+    embedded_fibers_ = true;
     fiber_reflector_ = false;
     
     num_fibers_ = 98;

@@ -191,8 +191,6 @@ G4VParticleChange* NedmOpTPB::PostStepDoIt(const G4Track& aTrack, const G4Step& 
     }
     
     
-    // Need something here to calcuate depth below surface normal
-    
     G4Track* aSecondaryTrack = new G4Track(aTPBPhoton, aSecondaryTime, aSecondaryPosition);
     
     aSecondaryTrack->SetTouchableHandle(aTrack.GetTouchableHandle());
