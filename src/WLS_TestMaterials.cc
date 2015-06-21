@@ -81,7 +81,7 @@ void WLS_TestMaterials::CreateMaterials()
     fAir = fNistMan->FindOrBuildMaterial("G4_AIR");
     
     //--------------------------------------------------
-    // WLSfiber PMMA
+    // PMMA
     //--------------------------------------------------
     
     elements.push_back("C");     natoms.push_back(5);
@@ -95,6 +95,12 @@ void WLS_TestMaterials::CreateMaterials()
     
     elements.clear();
     natoms.clear();
+    
+    //--------------------------------------------------
+    // WLSfiber PMMA - PMMA w/ different MPT
+    //--------------------------------------------------
+    
+    fWLSPMMA = new   G4Material("WLSPMMA",density,fPMMA);
     
     //--------------------------------------------------
     // Cladding (polyethylene)
@@ -140,8 +146,7 @@ void WLS_TestMaterials::CreateMaterials()
     
     elements.clear();
     natoms.clear();
-
-    /*
+    
     //--------------------------------------------------
     // Tetraphenyl butadiene (TPB)
     //--------------------------------------------------
@@ -150,7 +155,7 @@ void WLS_TestMaterials::CreateMaterials()
     elements.push_back("H");     natoms.push_back(22);
     
     density = 1.079*g/cm3;
-
+    
     G4Material* TPB = fNistMan->
     ConstructNewMaterial("TPB", elements, natoms, density);
     
@@ -167,9 +172,9 @@ void WLS_TestMaterials::CreateMaterials()
     fTPBDopedPS =
     new G4Material("TPBDopedPS", density, ncomponents=2);
     
-    fCoating->AddMaterial(TPB,         fractionmass = 2*perCent);
-    fCoating->AddMaterial(fPolystyrene, fractionmass = 98*perCent);
-*/
+    fTPBDopedPS->AddMaterial(TPB,         fractionmass = 2*perCent);
+    fTPBDopedPS->AddMaterial(fPolystyrene, fractionmass = 98*perCent);
+    
     //--------------------------------------------------
     // Silicone (Template for Optical Grease)
     //--------------------------------------------------
@@ -233,7 +238,19 @@ void WLS_TestMaterials::CreateMaterials()
         3.05*eV,3.08*eV,3.11*eV,3.14*eV,3.17*eV,
         3.20*eV,3.23*eV,3.26*eV,3.29*eV,3.32*eV,
         3.35*eV,3.38*eV,3.41*eV,3.44*eV,3.47*eV};
-    
+   
+    // Wavelength conversion (nm)
+    // {619.9,  610.8,  601.9,  593.2,  584.8,
+    //  576.7,  568.7,  561.0,  553.5,  546.2,
+    //  539.1,  532.1,  525.4,  518.7,  512.3,
+    //  506.1,  499.9,  494.0,  488.1,  482.4,
+    //  476.9,  471.4,  466.1,  460.9,  455.8,
+    //  450.9,  446.0,  441.2,  436.6,  432.0,
+    //  427.5,  423.2,  418.9,  414.7,  410.5,
+    //  406.5,  402.5,  398.7,  394.9,  391.1,
+    //  387.5,  383.9,  380.3,  376.9,  373.4,
+    //  370.1,  366.8,  363.6,  360.4,  357.3}
+
     const G4int nEntries = sizeof(photonEnergy)/sizeof(G4double);
     
     //--------------------------------------------------
@@ -255,7 +272,37 @@ void WLS_TestMaterials::CreateMaterials()
     fAir->SetMaterialPropertiesTable(mpt);
     
     //--------------------------------------------------
-    //  PMMA for WLSfibers
+    //  Regular PMMA properties
+    //--------------------------------------------------
+    
+    G4double refractiveIndexPMMA[] =
+    { 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60,
+        1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60,
+        1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60,
+        1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60,
+        1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60};
+    
+    assert(sizeof(refractiveIndexPMMA) == sizeof(photonEnergy));
+    
+    G4double absPMMA[] =
+    {20.*m, 20.*m,20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
+        20.*m, 20.*m,20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
+        20.*m, 20.*m,20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
+        20.*m, 20.*m,20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
+        20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m};
+    
+    assert(sizeof(absPMMA) == sizeof(photonEnergy));
+
+    // Add entries into properties table
+    G4MaterialPropertiesTable* mptPMMA = new G4MaterialPropertiesTable();
+    mptPMMA->
+    AddProperty("RINDEX",photonEnergy,refractiveIndexPMMA,nEntries);
+    mptPMMA->AddProperty("ABSLENGTH",photonEnergy,absPMMA,nEntries);
+
+    fPMMA->SetMaterialPropertiesTable(mptPMMA);
+
+    //--------------------------------------------------
+    //  PMMA for WLSfibers properties
     //--------------------------------------------------
     
     G4double refractiveIndexWLSfiber[] =
@@ -266,35 +313,46 @@ void WLS_TestMaterials::CreateMaterials()
         1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60};
     
     assert(sizeof(refractiveIndexWLSfiber) == sizeof(photonEnergy));
-    
+
+    G4double absfiber[] =
+    {20.*m, 20.*m,20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
+        20.*m, 20.*m,20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
+        20.*m, 20.*m,20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
+        20.*m, 20.*m,20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
+        20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m};
+
+    assert(sizeof(absfiber) == sizeof(photonEnergy));
+  
     G4double absWLSfiber[] =
     {5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,
         5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,
         5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,1.10*m,
-        1.10*m,1.10*m,1.10*m,1.10*m,1.10*m,1.10*m, 1.*mm, 1.*mm, 1.*mm, 1.*mm,
+        1.10*m, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm,
         1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm};
-    
+
+
     assert(sizeof(absWLSfiber) == sizeof(photonEnergy));
     
     G4double emissionFib[] =
-    {0.05, 0.10, 0.30, 0.50, 0.75, 1.00, 1.50, 1.85, 2.30, 2.75,
-        3.25, 3.80, 4.50, 5.20, 6.00, 7.00, 8.50, 9.50, 11.1, 12.4,
-        12.9, 13.0, 12.8, 12.3, 11.1, 11.0, 12.0, 11.0, 17.0, 16.9,
-        15.0, 9.00, 2.50, 1.00, 0.05, 0.00, 0.00, 0.00, 0.00, 0.00,
+    {0.05, 0.06, 0.13, 0.19, 0.28, 0.37, 0.53, 0.64, 1.00, 1.40,
+        1.90, 2.20, 2.30, 2.53, 3.10, 4.30, 5.00, 4.60, 3.00, 1.00,
+        0.14, 0.05, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+        0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
         0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00};
     
     assert(sizeof(emissionFib) == sizeof(photonEnergy));
+    
     
     // Add entries into properties table
     G4MaterialPropertiesTable* mptWLSfiber = new G4MaterialPropertiesTable();
     mptWLSfiber->
     AddProperty("RINDEX",photonEnergy,refractiveIndexWLSfiber,nEntries);
-    // mptWLSfiber->AddProperty("ABSLENGTH",photonEnergy,absWLSfiber,nEntries);
+    mptWLSfiber->AddProperty("ABSLENGTH",photonEnergy,absfiber,nEntries);
     mptWLSfiber->AddProperty("WLSABSLENGTH",photonEnergy,absWLSfiber,nEntries);
     mptWLSfiber->AddProperty("WLSCOMPONENT",photonEnergy,emissionFib,nEntries);
     mptWLSfiber->AddConstProperty("WLSTIMECONSTANT", 0.5*ns);
     
-    fPMMA->SetMaterialPropertiesTable(mptWLSfiber);
+    fWLSPMMA->SetMaterialPropertiesTable(mptWLSfiber);
     
     //--------------------------------------------------
     //  Polyethylene
