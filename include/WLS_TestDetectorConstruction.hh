@@ -46,13 +46,10 @@ class WLS_TestDetectorConstruction : public G4VUserDetectorConstruction
     void SetFibeReflrOn(G4bool b);
     G4bool GetFiberReflOn(){return fEmbeddedFiber;}
 
-    G4Material* FindMaterial(G4String);
-
   private:
 
     WLS_TestMaterials* fMaterials;
     
-    void DefineMaterials();
     G4VPhysicalVolume* ConstructDetector();
     
     static const G4int kEnergies;

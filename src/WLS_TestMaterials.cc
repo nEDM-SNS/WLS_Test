@@ -81,11 +81,7 @@ void WLS_TestMaterials::CreateMaterials()
     fAir = fNistMan->FindOrBuildMaterial("G4_AIR");
     
     //--------------------------------------------------
-<<<<<<< HEAD
     // PMMA
-=======
-    // WLSfiber PMMA
->>>>>>> master
     //--------------------------------------------------
     
     elements.push_back("C");     natoms.push_back(5);
@@ -101,15 +97,12 @@ void WLS_TestMaterials::CreateMaterials()
     natoms.clear();
     
     //--------------------------------------------------
-<<<<<<< HEAD
     // WLSfiber PMMA - PMMA w/ different MPT
     //--------------------------------------------------
     
     fWLSPMMA = new   G4Material("WLSPMMA",density,fPMMA);
     
     //--------------------------------------------------
-=======
->>>>>>> master
     // Cladding (polyethylene)
     //--------------------------------------------------
     
@@ -155,7 +148,6 @@ void WLS_TestMaterials::CreateMaterials()
     natoms.clear();
     
     //--------------------------------------------------
-<<<<<<< HEAD
     // Tetraphenyl butadiene (TPB)
     //--------------------------------------------------
     
@@ -184,8 +176,6 @@ void WLS_TestMaterials::CreateMaterials()
     fTPBDopedPS->AddMaterial(fPolystyrene, fractionmass = 98*perCent);
     
     //--------------------------------------------------
-=======
->>>>>>> master
     // Silicone (Template for Optical Grease)
     //--------------------------------------------------
     
@@ -282,8 +272,7 @@ void WLS_TestMaterials::CreateMaterials()
     fAir->SetMaterialPropertiesTable(mpt);
     
     //--------------------------------------------------
-<<<<<<< HEAD
-    //  Regular PMMA properties
+    //  Regular PMMA properties - used everywhere but fiber
     //--------------------------------------------------
     
     G4double refractiveIndexPMMA[] =
@@ -314,9 +303,6 @@ void WLS_TestMaterials::CreateMaterials()
 
     //--------------------------------------------------
     //  PMMA for WLSfibers properties
-=======
-    //  PMMA for WLSfibers
->>>>>>> master
     //--------------------------------------------------
     
     G4double refractiveIndexWLSfiber[] =
@@ -334,14 +320,10 @@ void WLS_TestMaterials::CreateMaterials()
         20.*m, 20.*m,20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
         20.*m, 20.*m,20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
         20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m};
-<<<<<<< HEAD
 
     assert(sizeof(absfiber) == sizeof(photonEnergy));
   
-=======
-    
-#if 1
->>>>>>> master
+
     G4double absWLSfiber[] =
     {5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,
         5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,5.40*m,
@@ -349,19 +331,7 @@ void WLS_TestMaterials::CreateMaterials()
         1.10*m, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm,
         1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm};
 
-<<<<<<< HEAD
 
-=======
-#else
-    G4double absWLSfiber[] =
-    {1.*mm, 1.*mm,1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm,
-        1.*mm, 1.*mm,1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm,
-        1.*mm, 1.*mm,1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm,
-        1.*mm, 1.*mm,1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm,
-        1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*mm};
-#endif
-    
->>>>>>> master
     assert(sizeof(absWLSfiber) == sizeof(photonEnergy));
     
     G4double emissionFib[] =
@@ -383,11 +353,8 @@ void WLS_TestMaterials::CreateMaterials()
     mptWLSfiber->AddProperty("WLSCOMPONENT",photonEnergy,emissionFib,nEntries);
     mptWLSfiber->AddConstProperty("WLSTIMECONSTANT", 0.5*ns);
     
-<<<<<<< HEAD
+
     fWLSPMMA->SetMaterialPropertiesTable(mptWLSfiber);
-=======
-    fPMMA->SetMaterialPropertiesTable(mptWLSfiber);
->>>>>>> master
     
     //--------------------------------------------------
     //  Polyethylene
@@ -506,7 +473,7 @@ void WLS_TestMaterials::CreateMaterials()
     
     fPolystyrene->GetIonisation()->SetBirksConstant(0.126*mm/MeV);
     
-<<<<<<< HEAD
+    
     //--------------------------------------------------
     // TPB doped PS matrix - 2% TPB and 98% polystyrene by weight.
     //--------------------------------------------------
@@ -521,6 +488,5 @@ void WLS_TestMaterials::CreateMaterials()
     
     fTPBDopedPS->SetMaterialPropertiesTable(mptTPBDopedPS);
 
-=======
->>>>>>> master
+
 }

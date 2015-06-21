@@ -21,11 +21,7 @@ class NedmWLSFiber : public G4PVPlacement
                 G4int pCopyNo,
                  G4bool Reflector=false);
     
-<<<<<<< HEAD
-=======
-    G4Material* FindMaterial(G4String);
 
->>>>>>> master
   private:
 
     void CopyValues();
