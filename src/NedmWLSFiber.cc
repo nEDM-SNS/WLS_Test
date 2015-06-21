@@ -12,7 +12,6 @@
 #include "G4LogicalVolume.hh"
 #include "G4OpticalSurface.hh"
 
-
 G4LogicalVolume* NedmWLSFiber::fClad2_log=NULL;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -25,11 +24,22 @@ NedmWLSFiber::NedmWLSFiber(G4RotationMatrix *pRot,
                            G4bool Reflector)
 :G4PVPlacement(pRot,tlate,
                new G4LogicalVolume(new G4Box("temp",1,1,1),
-                                   G4Material::GetMaterial("Air"),
+                                   G4Material::GetMaterial("G4_AIR"),
                                    "temp",0,0,0),
                "Cladding2",pMotherLogical,pMany,pCopyNo)
 {
     CopyValues();
+    
+    // Boundary Surface Properties
+    G4OpticalSurface* opSurface = NULL;
+    
+    if (fSurfaceRoughness < 1.)
+        opSurface = new G4OpticalSurface("RoughSurface",          // Surface Name
+                                         glisur,                  // SetModel
+                                         ground,                  // SetFinish
+                                         dielectric_dielectric,   // SetType
+                                         fSurfaceRoughness);      // SetPolish
+    
     
     G4RotationMatrix* zRot = new G4RotationMatrix;
     zRot->rotateZ(90*deg);
@@ -42,7 +52,7 @@ NedmWLSFiber::NedmWLSFiber(G4RotationMatrix *pRot,
     G4LogicalVolume* fiber_log =
     new G4LogicalVolume(fiber_tube,G4Material::GetMaterial("WLSPMMA"),
                         "Fiber",0,0,0);
-    
+   
     // Cladding (first layer)
     //
     G4Tubs* clad1_tube =
@@ -50,7 +60,7 @@ NedmWLSFiber::NedmWLSFiber(G4RotationMatrix *pRot,
                fClad1_ephi);
     
     G4LogicalVolume* clad1_log =
-    new G4LogicalVolume(clad1_tube,G4Material::GetMaterial("Pethylene1"),
+    new G4LogicalVolume(clad1_tube,G4Material::GetMaterial("Pethylene"),
                         "Cladding1",0,0,0);
     
     // Cladding (second layer)
@@ -60,7 +70,7 @@ NedmWLSFiber::NedmWLSFiber(G4RotationMatrix *pRot,
                fClad2_ephi);
     
     fClad2_log =
-    new G4LogicalVolume(clad2_tube,G4Material::GetMaterial("Pethylene2"),
+    new G4LogicalVolume(clad2_tube,G4Material::GetMaterial("FPethylene"),
                         "Cladding2",0,0,0);
     
     new G4PVPlacement(0,G4ThreeVector(0.,0.,0.),fiber_log,
@@ -68,10 +78,15 @@ NedmWLSFiber::NedmWLSFiber(G4RotationMatrix *pRot,
     new G4PVPlacement(0,G4ThreeVector(0.,0.,0.),clad1_log,
                       "Cladding1",fClad2_log,false,0);
     
+    // Place the rough surface only if needed
+    if (opSurface) {
+        new G4LogicalSkinSurface("Clad2_Surface", fClad2_log, opSurface);
+    }
+    
     G4VisAttributes* FiberVis=new G4VisAttributes(G4Color(0.0,1.0,0.0));
     FiberVis->SetVisibility(true);
     fClad2_log->SetVisAttributes(FiberVis);
-
+    
     
     SetLogicalVolume(fClad2_log);
     
@@ -84,9 +99,7 @@ NedmWLSFiber::NedmWLSFiber(G4RotationMatrix *pRot,
                                          fMirrorSPhi,
                                          fMirrorEPhi);
         
-        G4LogicalVolume* logicMirror = new G4LogicalVolume(solidMirror,
-                                                           G4Material::GetMaterial("PMMA"),
-                                                           "Mirror");
+        G4LogicalVolume* logicMirror = new G4LogicalVolume(solidMirror,G4Material::GetMaterial("PMMA"),"Mirror");
         
         // Photon Energies for which mirror properties will be given
         const G4int kEnergies = 3;
@@ -110,7 +123,7 @@ NedmWLSFiber::NedmWLSFiber(G4RotationMatrix *pRot,
                           G4ThreeVector(0.,0.,fMirrorPosZ),   //position
                           logicMirror,                  //its logical volume
                           "Mirror",                     //its name
-                          //                    Clad2_log,                   //its mother  volume
+                          //Clad2_log,                  //its mother  volume
                           fiber_log,                   //its mother  volume
                           false,                        //no boolean operation
                           0);                           //copy number
@@ -122,7 +135,7 @@ NedmWLSFiber::NedmWLSFiber(G4RotationMatrix *pRot,
         G4VisAttributes* MirrorVis=new G4VisAttributes(G4Color(0.0,0.0,1.0));
         MirrorVis->SetVisibility(true);
         logicMirror->SetVisAttributes(MirrorVis);
-
+        
     }
 }
 
@@ -132,10 +145,12 @@ void NedmWLSFiber::CopyValues(){
     
     fFiber_rmin = 0.00*cm;
     fFiber_rmax = 0.088/2*cm;
-    fFiber_z    = 20.64*cm;
-//  fFiber_z    = 20./2*cm;
+    //  fFiber_z    = 112./2*cm;
+    fFiber_z    = 20./2*cm;
     fFiber_sphi = 0.00*deg;
     fFiber_ephi = 360.*deg;
+    
+    fSurfaceRoughness = 0.9;
     
     fClad1_rmin = 0.;// fFiber_rmax;
     fClad1_rmax = fFiber_rmax + 0.003*cm;
@@ -160,6 +175,7 @@ void NedmWLSFiber::CopyValues(){
     
     fMirrorPosZ  = -1*(fFiber_z - fMirrorThick);
     fMirrorReflectivity = 1;
-
+    
     
 }
+
