@@ -23,9 +23,16 @@ class NedmCellSide : public G4PVPlacement {
     static G4LogicalVolume* fCellSide_log;
 
     void ConstructTPBInterface();
+    void ConstructEmbeddedFibers();
     
     G4ThreeVector fCell_Size;
     G4double fTPB_Thickness;
+ 
+    G4bool fEmbedded_fibers;
+    G4bool fFiber_Reflector;
+    G4bool fFiber_spacing;
+    G4int fNum_fibers;
+    G4double fFiber_Thickness;
     
 
 };

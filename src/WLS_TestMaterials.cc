@@ -20,10 +20,13 @@ WLS_TestMaterials::WLS_TestMaterials()
 WLS_TestMaterials::~WLS_TestMaterials()
 {
     delete    fPMMA;
+    delete    fWLSPMMA;
     delete    fPethylene;
     delete    fFPethylene;
     delete    fPolystyrene;
+    delete    fTPBDopedPS;
     delete    fSilicone;
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -195,33 +198,6 @@ void WLS_TestMaterials::CreateMaterials()
     //--------------------------------------------------
     
     fNistMan->FindOrBuildMaterial("G4_Al");
-    
-    //--------------------------------------------------
-    // TiO2
-    //--------------------------------------------------
-    
-    elements.push_back("Ti");     natoms.push_back(1);
-    elements.push_back("O");      natoms.push_back(2);
-    
-    density     = 4.26*g/cm3;
-    
-    G4Material* TiO2 = fNistMan->
-    ConstructNewMaterial("TiO2", elements, natoms, density);
-    
-    elements.clear();
-    natoms.clear();
-    
-    //--------------------------------------------------
-    // Scintillator Coating - 15% TiO2 and 85% polystyrene by weight.
-    //--------------------------------------------------
-    
-    density = 1.52*g/cm3;
-    
-    fCoating =
-    new G4Material("Coating", density, ncomponents=2);
-    
-    fCoating->AddMaterial(TiO2,         fractionmass = 15*perCent);
-    fCoating->AddMaterial(fPolystyrene, fractionmass = 85*perCent);
     
     //
     // ------------ Generate & Add Material Properties Table ------------

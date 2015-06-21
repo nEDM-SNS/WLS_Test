@@ -1,4 +1,5 @@
 #include "NedmWLSFiber.hh"
+#include "NedmDetectorParameters.hh"
 
 #include "globals.hh"
 #include "G4LogicalSkinSurface.hh"
@@ -146,33 +147,36 @@ NedmWLSFiber::NedmWLSFiber(G4RotationMatrix *pRot,
 
 void NedmWLSFiber::CopyValues(){
     
+    NedmDetectorParameters* params = NedmDetectorParameters::instance();
+
+    fClad2_rmin = 0.;
+    fClad2_rmax = params->fiber_thick()/2;
+    
+    fClad2_z    = params->cell_size().z();
+    fClad2_sphi = 0.00*deg;
+    fClad2_ephi = 360.*deg;
+ 
+    fClad1_rmin = 0.;// fFiber_rmax;
+    fClad1_rmax = fClad2_rmax - 0.003*cm;
+    
+    fClad1_z    = fClad2_z;
+    fClad1_sphi = fClad2_sphi;
+    fClad1_ephi = fClad2_ephi;
+
     fFiber_rmin = 0.00*cm;
-    fFiber_rmax = 0.088/2*cm;
-    //  fFiber_z    = 112./2*cm;
-    fFiber_z    = 20./2*cm;
-    fFiber_sphi = 0.00*deg;
-    fFiber_ephi = 360.*deg;
+    fFiber_rmax = fClad1_rmax - 0.003*cm;
+    fFiber_z    = fClad2_z;
+    fFiber_sphi = fClad1_sphi;
+    fFiber_ephi = fClad1_ephi;
     
     fSurfaceRoughness = 0.9;
     
-    fClad1_rmin = 0.;// fFiber_rmax;
-    fClad1_rmax = fFiber_rmax + 0.003*cm;
     
-    fClad1_z    = fFiber_z;
-    fClad1_sphi = fFiber_sphi;
-    fClad1_ephi = fFiber_ephi;
-    
-    fClad2_rmin = 0.;//fClad1_rmax;
-    fClad2_rmax = fClad1_rmax + 0.003*cm;
-    
-    fClad2_z    = fFiber_z;
-    fClad2_sphi = fFiber_sphi;
-    fClad2_ephi = fFiber_ephi;
     
     //fMirrorRmax  = fClad2_rmax;
     fMirrorRmax  = fFiber_rmax;
     fMirrorRmin  = 0.*cm;
-    fMirrorThick     = 1./2*mm;
+    fMirrorThick = 1./2*mm;
     fMirrorSPhi  = fFiber_sphi;
     fMirrorEPhi  = fFiber_ephi;
     
