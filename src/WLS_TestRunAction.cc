@@ -44,7 +44,7 @@ void WLS_TestRunAction::BeginOfRunAction(const G4Run* aRun)
     analysisManager->OpenFile("Test");
     
     // index 0
-    analysisManager->CreateH1("Photons", "Bins: 1=Primaries, 2=OpWLS Photons, 6=fiber +x end, 7=fiber -x end", 10, 0., 10.);
+    analysisManager->CreateH1("Photons", "Bins: 1=Primaries, 2=OpWLS Photons, 6=fiber +z end, 7=fiber -z end", 10, 0., 10.);
     
     // index 1
     analysisManager->CreateH1("wlsSpectrum", "Wavelength of photons produced in green fibers", 100, 300., 800.);
@@ -53,10 +53,10 @@ void WLS_TestRunAction::BeginOfRunAction(const G4Run* aRun)
     analysisManager->CreateH1("wlsEnergy", "Energy of photons produced in green fibers", 100, 1., 4.);
     
     // index 3
-    analysisManager->CreateH1("cosThetaPosx", "Cosine of the exit angle for +x end of fiber", 100, -1.001, 1.001);
+    analysisManager->CreateH1("cosThetaPosz", "Cosine of the exit angle for +z end of fiber", 100, -1.001, 1.001);
     
     // index 4
-    analysisManager->CreateH1("cosThetaNegx", "Cosine of the exit angle for -x end of fiber", 100, -1.001, 1.001);
+    analysisManager->CreateH1("cosThetaNegz", "Cosine of the exit angle for -z end of fiber", 100, -1.001, 1.001);
    
 
 }

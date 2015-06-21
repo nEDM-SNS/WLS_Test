@@ -22,8 +22,7 @@ void WLS_TestSteppingAction::UserSteppingAction(const G4Step* aStep)
     const G4StepPoint *p_in  = aStep->GetPreStepPoint();
     const G4StepPoint *p_out = aStep->GetPostStepPoint();
 
-    // Ignore 1st and last step
-//    if (aStep->GetTrack()->GetCurrentStepNumber() != 1 && p_out->GetStepStatus()!= fWorldBoundary) {
+    // Ignore steps at world boundary
     if (p_out->GetStepStatus()!= fWorldBoundary) {
         G4LogicalVolume* inVol;
         inVol = p_in->GetTouchableHandle()->GetVolume()->GetLogicalVolume();
@@ -33,65 +32,18 @@ void WLS_TestSteppingAction::UserSteppingAction(const G4Step* aStep)
         
         if( (inVol->GetName() == "Fiber" || inVol->GetName() == "Mirror") && outVol->GetName() == "expHall_log") {
             G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
-            
-            G4double cosTheta = aStep->GetTrack()->GetMomentumDirection().x();
-            
-// If the following flag is set, the photons that reflect from the end of the tube propagate as normal
-#if 0
-            if (p_out->GetPosition().x() > 0. && cosTheta > 0.) {
-                analysisManager->FillH1(0, 6);
-                analysisManager->FillH1(3, cosTheta);
-                aStep->GetTrack()->SetTrackStatus(fStopAndKill);
-                
-            }
-            else if (p_out->GetPosition().x() < 0. && cosTheta < 0.)
-            {
-                analysisManager->FillH1(0, 7);
-                analysisManager->FillH1(4, cosTheta);
-                aStep->GetTrack()->SetTrackStatus(fStopAndKill);
-            }
-            else {
-                // G4cout << "!!!!! Reflection !!!!!" << G4endl;
-            }
-            
-// If the above Flag is not set, then any photon that hits the end of the fiber will be counted as detected and killed
-#elseif 0
-            if (p_out->GetPosition().x() > 0.) {
-                analysisManager->FillH1(0, 6);
-                if (cosTheta > 0.) {
-                    analysisManager->FillH1(3, cosTheta);
-                }
-                else
-                {
-                    cosTheta = p_in->GetMomentumDirection().x();
-                    analysisManager->FillH1(3, cosTheta);
-                }
-                aStep->GetTrack()->SetTrackStatus(fStopAndKill);
-            }
-            else {
-                analysisManager->FillH1(0, 7);
-                if (cosTheta < 0.) {
-                    analysisManager->FillH1(4, cosTheta);
-                }
-                else
-                {
-                    cosTheta = p_in->GetMomentumDirection().x();
-                    analysisManager->FillH1(4, cosTheta);
-                }
-                aStep->GetTrack()->SetTrackStatus(fStopAndKill);
-                
-            }
-#else
+
+
 //New default behavior is to record all photons that reach the end of the fiber, and read out the angle with which they HIT the fiber.  This should mimick optical coupling much better.
-            cosTheta = p_in->GetMomentumDirection().x();
+            G4double cosTheta = p_in->GetMomentumDirection().z();
             
-            if (p_out->GetPosition().x() > 0.) {
+            if (p_out->GetPosition().z() > 0.) {
                 analysisManager->FillH1(0, 6);
                 analysisManager->FillH1(3, cosTheta);
                 aStep->GetTrack()->SetTrackStatus(fStopAndKill);
                 
             }
-            else if (p_out->GetPosition().x() < 0.)
+            else if (p_out->GetPosition().z() < 0.)
             {
                 analysisManager->FillH1(0, 7);
                 analysisManager->FillH1(4, cosTheta);
@@ -104,8 +56,7 @@ void WLS_TestSteppingAction::UserSteppingAction(const G4Step* aStep)
             }
 
             
-            
-#endif
+        
             
             // For debugging above
             /*
