@@ -44,7 +44,7 @@ void WLS_TestRunAction::BeginOfRunAction(const G4Run* aRun)
     analysisManager->OpenFile("Test");
     
     // index 0
-    analysisManager->CreateH1("Photons", "Bins: 1=Primaries, 2=OpTPB Photons, 3=OpWLS Photons, 6=fiber +z end, 7=fiber -z end", 10, 0., 10.);
+    analysisManager->CreateH1("Photons", "Bins: 1=Primaries, 2=OpTPB Photons, 3=TPB Photons inside, 4=TPB Photons Outside, 5=OpWLS Photons, 6=fiber +z end, 7=fiber -z end", 10, 0., 10.);
     
     // index 1
     analysisManager->CreateH1("wlsSpectrum", "Wavelength of photons produced in green fibers", 100, 300., 800.);

@@ -29,7 +29,7 @@ void WLS_TestTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
         
         else if(aTrack->GetCreatorProcess()->GetProcessName()=="OpWLS")
         {
-            analysisManager->FillH1(0, 3);
+            analysisManager->FillH1(0, 5);
             analysisManager->FillH1(1, h_Planck*c_light/aTrack->GetDynamicParticle()->GetKineticEnergy()/nm);
             analysisManager->FillH1(2, aTrack->GetDynamicParticle()->GetKineticEnergy()/eV);
         }

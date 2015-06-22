@@ -7,7 +7,7 @@
 #include "G4LogicalBorderSurface.hh"
 #include "G4SystemOfUnits.hh"
 
-//#include "LightCollectionAnalysis.hh"
+#include "WLS_TestAnalysis.hh"
 
 #include "G4ParallelWorldProcess.hh"
 #include "G4TransportationManager.hh"
@@ -39,7 +39,7 @@ G4double NedmOpTPB::GetMeanFreePath(const G4Track& aTrack, G4double previousStep
 
 G4VParticleChange* NedmOpTPB::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep) {
     
-    //G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+    G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
     
     pParticleChange->Initialize(aTrack);
     
@@ -173,21 +173,18 @@ G4VParticleChange* NedmOpTPB::PostStepDoIt(const G4Track& aTrack, const G4Step& 
     
     G4double the_penetration_depth = the_penetration_length * OldMomentumDir * theGlobalNormal;
     
-    //analysisManager->FillH1(6, the_penetration_length/nm);
-    //analysisManager->FillH1(7, the_penetration_depth/nm);
-    //analysisManager->FillH1(8, the_penetration_length/the_mean_penetration_length_);
-    //analysisManager->FillH1(9, the_penetration_depth/the_mean_penetration_length_);
-    
-    //
+
     
     G4double aSecondaryTime = postStepPoint->GetGlobalTime();
     
     G4ThreeVector aSecondaryPosition;
     if (the_penetration_depth/the_mean_penetration_length_ > the_depth_cutoff_in_MFPs_) {
         aSecondaryPosition = the_penetration_length * aTrack.GetMomentumDirection() + postStepPoint->GetPosition();
+        analysisManager->FillH1(0, 3);
     }
     else{
         aSecondaryPosition = -1.*the_penetration_length * aTrack.GetMomentumDirection() + postStepPoint->GetPosition();
+        analysisManager->FillH1(0, 4);
     }
     
     
