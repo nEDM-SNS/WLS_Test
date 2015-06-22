@@ -16,6 +16,7 @@ public:
     inline G4bool cell_wall_on() const { return cell_wall_on_;}
     inline G4bool embedded_fibers() const { return embedded_fibers_;}
     inline G4bool fiber_reflector() const { return fiber_reflector_;}
+    inline G4bool outer_reflector() const { return outer_reflector_;}
     
     inline G4int num_fibers() const { return num_fibers_;}
     inline G4double fiber_thick() const { return fiber_thick_; }
@@ -35,6 +36,7 @@ private:
     G4bool cell_wall_on_;
     G4bool embedded_fibers_;
     G4bool fiber_reflector_;
+    G4bool outer_reflector_;
     
     G4int num_fibers_;
     G4double fiber_thick_;

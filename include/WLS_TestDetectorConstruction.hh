@@ -34,6 +34,8 @@ class WLS_TestDetectorConstruction : public G4VUserDetectorConstruction
     NedmDetectorParameters* fParams;
     
     G4VPhysicalVolume* ConstructDetector();
+    void ConstructCellPlates();
+    void ConstructOuterReflector();
     
     G4Box* fExperimentalHall_box;
     G4LogicalVolume* fExperimentalHall_log;

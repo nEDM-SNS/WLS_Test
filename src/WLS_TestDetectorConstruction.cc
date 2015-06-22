@@ -19,6 +19,7 @@
 #include "G4Material.hh"
 #include "G4Box.hh"
 #include "G4Tubs.hh"
+#include "G4SubtractionSolid.hh"
 #include "G4Sphere.hh"
 #include "G4LogicalVolume.hh"
 #include "G4ThreeVector.hh"
@@ -90,9 +91,17 @@ G4VPhysicalVolume* WLS_TestDetectorConstruction::ConstructDetector()
     fExperimentalHall_log->SetVisAttributes(G4VisAttributes::Invisible);
     
     
+    ConstructCellPlates();
+    if (fParams->outer_reflector()) ConstructOuterReflector();
     
     
-    
+    return fExperimentalHall_phys;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void WLS_TestDetectorConstruction::ConstructCellPlates()
+{
     // number of fibers
     G4int nFibers = fParams->num_fibers();
     
@@ -111,7 +120,7 @@ G4VPhysicalVolume* WLS_TestDetectorConstruction::ConstructDetector()
         if (fParams->embedded_fibers()==false)
         {
             G4double Y_pos = -1*(fParams->cell_size().y()+fParams->fiber_thick()/2+.001*cm);
-
+            
             for(G4int i=0;i<nFibers;i++){
                 G4double X_pos=-(spacing)*(nFibers-1)*0.5 + i*spacing;
                 new NedmWLSFiber(0,G4ThreeVector(X_pos,Y_pos,0.),fExperimentalHall_log,false,0,fParams->fiber_reflector());
@@ -128,10 +137,55 @@ G4VPhysicalVolume* WLS_TestDetectorConstruction::ConstructDetector()
             G4double X_pos=-(spacing)*(nFibers-1)*0.5 + i*spacing;
             new NedmWLSFiber(0,G4ThreeVector(X_pos,0.,0.),fExperimentalHall_log,false,0,fParams->fiber_reflector());
         }
-
+        
     }
+ 
+}
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void WLS_TestDetectorConstruction::ConstructOuterReflector()
+{
+    // Reflector Wrapping
+    G4Box* OuterReflector = new G4Box("OuterReflector",8.*cm,8.*cm,fParams->cell_size().z());
+    G4Box* InnerReflector = new G4Box("InnerReflector",7.*cm,7.*cm,fParams->cell_size().z());
+    G4SubtractionSolid* SolidReflector = new G4SubtractionSolid("Reflector",OuterReflector,InnerReflector);
     
-    return fExperimentalHall_phys;
+    G4LogicalVolume* Reflector_Log = new G4LogicalVolume(SolidReflector, G4Material::GetMaterial("PMMA"), "Reflector");
+    
+    
+    // Photon Energies for which mirror properties will be given
+    const G4int kEnergies = 3;
+    G4double the_photon_energies_[kEnergies] = {2.034*eV, 4.136*eV, 16*eV};
+    
+    // Optical Surface for mirror
+    G4OpticalSurface* mirror_surface_ =
+    new G4OpticalSurface("MirrorSurface", glisur, groundfrontpainted,
+                         dielectric_dielectric);
+    
+    // Reflectivity of mirror for each photon energy
+    G4double mirror_REFL[kEnergies] = {0.998, 0.998, 0.998};
+    
+    //Table of Surface Properties for Mirror
+    G4MaterialPropertiesTable* mirrorSurfaceProperty = new G4MaterialPropertiesTable();
+    mirrorSurfaceProperty->AddProperty("REFLECTIVITY", the_photon_energies_, mirror_REFL, kEnergies);
+    mirror_surface_->SetMaterialPropertiesTable(mirrorSurfaceProperty);
+
+    new G4LogicalSkinSurface("Reflector_surface", Reflector_Log, mirror_surface_);
+    
+    
+    G4VisAttributes* ReflectVis=new G4VisAttributes(G4Color(1.0,1.0,1.0));
+    ReflectVis->SetVisibility(true);
+    ReflectVis->SetForceWireframe(true);
+    Reflector_Log->SetVisAttributes(ReflectVis);
+    
+    new G4PVPlacement(0,                            //no rotation
+                      G4ThreeVector(),              //at (0,0,0)
+                      Reflector_Log,                     //its logical volume
+                      "Reflector",            //its name
+                      fExperimentalHall_log,                //its mother  volume
+                      false,                        //no boolean operation
+                      0);                            //copy number
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
