@@ -50,7 +50,7 @@ NedmCellSide::NedmCellSide(G4RotationMatrix* pRot,
     fCellSide_log->SetVisAttributes(cellVis);
 
     
-    ConstructTPBInterface();
+    if (fTPB_On) ConstructTPBInterface();
     if (fEmbedded_fibers) ConstructEmbeddedFibers();
 
     SetLogicalVolume(fCellSide_log);
@@ -104,6 +104,7 @@ void NedmCellSide::CopyValues()
     fTPB_Thickness = 0.01*cm;
     
     fEmbedded_fibers = params->embedded_fibers();
+    fTPB_On = params->tpb_layer_on();
     fFiber_Reflector = params->fiber_reflector();
     fFiber_spacing = params->fiber_spacing();
     fNum_fibers = params->num_fibers();

@@ -14,6 +14,7 @@ public:
     inline G4ThreeVector cell_size() const { return cell_size_; }
 
     inline G4bool cell_wall_on() const { return cell_wall_on_;}
+    inline G4bool tpb_layer_on() const { return tpb_layer_on_;}
     inline G4bool embedded_fibers() const { return embedded_fibers_;}
     inline G4bool fiber_reflector() const { return fiber_reflector_;}
     inline G4bool outer_reflector() const { return outer_reflector_;}
@@ -34,6 +35,7 @@ private:
     G4ThreeVector cell_size_;
     
     G4bool cell_wall_on_;
+    G4bool tpb_layer_on_;
     G4bool embedded_fibers_;
     G4bool fiber_reflector_;
     G4bool outer_reflector_;

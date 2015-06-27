@@ -176,7 +176,8 @@ G4VParticleChange* NedmOpTPB::PostStepDoIt(const G4Track& aTrack, const G4Step& 
 
     
     G4double aSecondaryTime = postStepPoint->GetGlobalTime();
-    
+
+
     G4ThreeVector aSecondaryPosition;
     if (the_penetration_depth/the_mean_penetration_length_ > the_depth_cutoff_in_MFPs_) {
         aSecondaryPosition = the_penetration_length * aTrack.GetMomentumDirection() + postStepPoint->GetPosition();
@@ -187,6 +188,12 @@ G4VParticleChange* NedmOpTPB::PostStepDoIt(const G4Track& aTrack, const G4Step& 
         analysisManager->FillH1(0, 4);
     }
     
+    /*
+    G4cout << "EUV capture position" << postStepPoint->GetPosition() << G4endl;
+    G4cout << "Initial Momentum Direction" << aTrack.GetMomentumDirection() << G4endl;
+    G4cout << "Blue Photon production position" << aSecondaryPosition/cm << G4endl;
+    G4cout << "Blue Photon momentum direction" << momentumDirection << G4endl;
+     */
     
     G4Track* aSecondaryTrack = new G4Track(aTPBPhoton, aSecondaryTime, aSecondaryPosition);
     
