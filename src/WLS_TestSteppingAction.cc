@@ -1,6 +1,7 @@
 #include "WLS_TestSteppingAction.hh"
 
 #include "WLS_TestAnalysis.hh"
+#include "WLS_TestTrackInformation.hh"
 
 #include "G4Step.hh"
 #include "G4StepStatus.hh"
@@ -108,15 +109,20 @@ void WLS_TestSteppingAction::UserSteppingAction(const G4Step* aStep)
             
             if (ReflectionCheck>1.0e-12) {
                 
+                WLS_TestTrackInformation* trackInfo = (WLS_TestTrackInformation*)aStep->GetTrack()->GetUserInformation();
+                
                 
                 if (theGlobalNormal == G4ThreeVector(1,0,0) || theGlobalNormal == G4ThreeVector(-1,0,0)) {
-                    G4cout << "***X-Plate Exit***" << G4endl;
+                    //G4cout << "***X-Plate Exit***" << G4endl;
+                    trackInfo->SetStatus(1);
                 }
                 else if (theGlobalNormal == G4ThreeVector(0,1,0) || theGlobalNormal == G4ThreeVector(0,-1,0)) {
-                    G4cout << "***Y-Plate Exit***" << G4endl;
+                    //G4cout << "***Y-Plate Exit***" << G4endl;
+                    trackInfo->SetStatus(2);
                 }
                 else if (theGlobalNormal == G4ThreeVector(0,0,1) || theGlobalNormal == G4ThreeVector(0,0,-1)) {
-                    G4cout << "***Z-Plate Exit***" << G4endl;
+                    //G4cout << "***Z-Plate Exit***" << G4endl;
+                    trackInfo->SetStatus(3);
                 }
                 
                 
@@ -138,15 +144,21 @@ void WLS_TestSteppingAction::UserSteppingAction(const G4Step* aStep)
 
         else if (p_out->GetProcessDefinedStep()->GetProcessName() == "OpAbsorption")
         {
+            
+            WLS_TestTrackInformation* trackInfo = (WLS_TestTrackInformation*)aStep->GetTrack()->GetUserInformation();
+
+            
             if( inVol->GetName() == "Cell" && outVol->GetName() == "Cell")
             {
-                G4cout << "*****Absorption In Cell*****" << G4endl;
-                
+                //G4cout << "*****Absorption In Cell*****" << G4endl;
+                trackInfo->SetStatus(4);
             }
             
             if( inVol->GetName() == "TPBInterface" && outVol->GetName() == "TPBInterface")
             {
-                G4cout << "*****Absorption In TPBInterface*****" << G4endl;
+                //G4cout << "*****Absorption In TPBInterface*****" << G4endl;
+                trackInfo->SetStatus(5);
+
             }
 
 

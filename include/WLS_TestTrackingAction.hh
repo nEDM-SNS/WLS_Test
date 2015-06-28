@@ -13,6 +13,7 @@ public:
     virtual void PreUserTrackingAction(const G4Track*);
     virtual void PostUserTrackingAction(const G4Track*);
     
+    
 };
 
 #endif

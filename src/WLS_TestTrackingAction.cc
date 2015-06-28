@@ -8,10 +8,16 @@
 #include "G4SystemOfUnits.hh"
 
 #include "WLS_TestTrackingAction.hh"
+#include "WLS_TestTrackInformation.hh"
 #include "WLS_TestAnalysis.hh"
 
 void WLS_TestTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
 {
+    WLS_TestTrackInformation* trackInfo = new WLS_TestTrackInformation();
+    
+    fpTrackingManager->SetUserTrackInformation(trackInfo);
+
+    
     G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
 
     if (aTrack->GetParentID()==0) {
@@ -47,5 +53,18 @@ void WLS_TestTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
 
 void WLS_TestTrackingAction::PostUserTrackingAction(const G4Track * aTrack)
 {
+    G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+
+    WLS_TestTrackInformation* trackInfo = (WLS_TestTrackInformation*)aTrack->GetUserInformation();
     
+    G4int status = trackInfo->GetStatus();
+    
+    analysisManager->FillH1(5, status);
+    if (status == 3 || status ==4 || status == 5) {
+        analysisManager->FillH1(5, 8);
+    }
+    else if (status == 1 || status ==2)
+    {
+        analysisManager->FillH1(5, 9);
+    }
 }
