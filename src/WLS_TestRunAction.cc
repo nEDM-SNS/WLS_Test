@@ -3,6 +3,7 @@
 
 #include "WLS_TestRunAction.hh"
 #include "WLS_TestAnalysis.hh"
+#include "WLS_TestRunActionMessenger.hh"
 
 #include "G4Run.hh"
 #include "G4RunManager.hh"
@@ -16,6 +17,9 @@ WLS_TestRunAction::WLS_TestRunAction()
     if (IsMaster()) {
         timer = new G4Timer();
     }
+    
+    fMessenger = new WLS_TestRunActionMessenger(this);
+    fileName = "";
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -41,7 +45,7 @@ void WLS_TestRunAction::BeginOfRunAction(const G4Run* aRun)
     
     G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
     
-    if(fileName==""){fileName = "WLS_Test";}
+    if(fileName==""){fileName = "output/WLS_Test";}
     analysisManager->OpenFile(fileName);
     
     // index 0

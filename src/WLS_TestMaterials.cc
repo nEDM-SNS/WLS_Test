@@ -266,7 +266,6 @@ void WLS_TestMaterials::CreateMaterials()
         20.*m, 20.*m,20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
         20.*m, 20.*m,20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
         20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m};
-
     
     assert(sizeof(absPMMA) == sizeof(photonEnergy));
 
@@ -458,7 +457,9 @@ void WLS_TestMaterials::CreateMaterials()
     // Add entries into properties table (same as PS)
     G4MaterialPropertiesTable* mptTPBDopedPS = new G4MaterialPropertiesTable();
     mptTPBDopedPS->AddProperty("RINDEX", photonEnergy, refractiveIndexPS, nEntries);
+//    mptTPBDopedPS->AddProperty("RINDEX", photonEnergy, refractiveIndexPMMA, nEntries);
     mptTPBDopedPS->AddProperty("ABSLENGTH",photonEnergy,absPS,nEntries);
+//    mptTPBDopedPS->AddProperty("ABSLENGTH",photonEnergy,absPMMA,nEntries);
     
     // This property triggers the TPB process
     mptTPBDopedPS->AddConstProperty("TPBCONVERSIONEFFICIENCY", 0.24);

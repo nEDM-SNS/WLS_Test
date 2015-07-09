@@ -47,6 +47,7 @@ set(WLS_TEST_SCRIPTS
 #    testRun.mac
     input_fiber.mac
     input_plate.mac
+    test.mac
     init.mac
     init_vis.mac
     gui.mac

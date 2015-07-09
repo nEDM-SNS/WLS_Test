@@ -8,6 +8,7 @@
 
 class G4Timer;
 class G4Run;
+class WLS_TestRunActionMessenger;
 
 class WLS_TestRunAction : public G4UserRunAction
 {
@@ -24,7 +25,10 @@ class WLS_TestRunAction : public G4UserRunAction
 
   private:
     G4Timer* timer;
-    G4String fileName = "";
+    G4String fileName;
+    
+    WLS_TestRunActionMessenger*  fMessenger;   // messenger
+
 
 };
 

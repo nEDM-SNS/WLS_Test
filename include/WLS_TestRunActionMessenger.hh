@@ -1,23 +1,23 @@
-#ifndef SNS_TestRunActionMessenger_h
-#define SNS_TestRunActionMessenger_h 1
+#ifndef WLS_TestRunActionMessenger_h
+#define WLS_TestRunActionMessenger_h 1
 
 #include "globals.hh"
 #include "G4UImessenger.hh"
 
-class SNS_TestRunAction;
+class WLS_TestRunAction;
 class G4UIdirectory;
 class G4UIcmdWithAString;
 
-class SNS_TestRunActionMessenger: public G4UImessenger
+class WLS_TestRunActionMessenger: public G4UImessenger
 {
   public:
-    SNS_TestRunActionMessenger(SNS_TestRunAction* runAction);
-    virtual ~SNS_TestRunActionMessenger();
+    WLS_TestRunActionMessenger(WLS_TestRunAction* runAction);
+    virtual ~WLS_TestRunActionMessenger();
     
     virtual void SetNewValue(G4UIcommand*, G4String);
     
   private:
-    SNS_TestRunAction* 	 fRunAction;
+    WLS_TestRunAction* 	 fRunAction;
     G4UIdirectory*           fDirectory;
     G4UIcmdWithAString*      fSetFileNameCmd;
 
