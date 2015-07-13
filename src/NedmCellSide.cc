@@ -101,7 +101,7 @@ void NedmCellSide::CopyValues()
     fCell_Size = params->cell_size();
     
     // Arbitrary thickness for now, shouldn't have effect, fix later
-    fTPB_Thickness = 0.01*cm;
+    fTPB_Thickness = 0.001*cm;
     
     fEmbedded_fibers = params->embedded_fibers();
     fTPB_On = params->tpb_layer_on();

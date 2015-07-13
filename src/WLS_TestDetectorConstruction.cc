@@ -20,6 +20,7 @@
 #include "G4Box.hh"
 #include "G4Tubs.hh"
 #include "G4SubtractionSolid.hh"
+#include "G4UnionSolid.hh"
 #include "G4Sphere.hh"
 #include "G4LogicalVolume.hh"
 #include "G4ThreeVector.hh"
@@ -92,7 +93,9 @@ G4VPhysicalVolume* WLS_TestDetectorConstruction::ConstructDetector()
     
     
     ConstructCellPlates();
-    if (fParams->outer_reflector()) ConstructOuterReflector();
+    
+    //if (fParams->outer_reflector()) ConstructSquareTubeReflector();
+    if (fParams->outer_reflector()) ConstructFullTentReflector();
     
     
     return fExperimentalHall_phys;
@@ -109,17 +112,17 @@ void WLS_TestDetectorConstruction::ConstructCellPlates()
     G4double spacing = fParams->fiber_spacing();
     
     // Rotation - use if needed
-    G4RotationMatrix* rotY = new G4RotationMatrix();
-    rotY->rotateY(-90*deg);
+    G4RotationMatrix* rotX = new G4RotationMatrix();
+    rotX->rotateX(180*deg);
     
     // Create Cell Wall
     if (fParams->cell_wall_on())
     {
-        new NedmCellSide(0,G4ThreeVector(0.,0.,0.),fExperimentalHall_log,0);
+        new NedmCellSide(rotX,G4ThreeVector(0.,0.,0.),fExperimentalHall_log,0);
         
         if (fParams->embedded_fibers()==false)
         {
-            G4double Y_pos = -1*(fParams->cell_size().y()+fParams->fiber_thick()/2+.001*cm);
+            G4double Y_pos = 1*(fParams->cell_size().y()+fParams->fiber_thick()/2+.001*cm);
             
             for(G4int i=0;i<nFibers;i++){
                 G4double X_pos=-(spacing)*(nFibers-1)*0.5 + i*spacing;
@@ -143,7 +146,7 @@ void WLS_TestDetectorConstruction::ConstructCellPlates()
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void WLS_TestDetectorConstruction::ConstructOuterReflector()
+void WLS_TestDetectorConstruction::ConstructSquareTubeReflector()
 {
     // Reflector Wrapping
     G4Box* OuterReflector = new G4Box("OuterReflector",8.*cm,8.*cm,fParams->cell_size().z());
@@ -186,6 +189,59 @@ void WLS_TestDetectorConstruction::ConstructOuterReflector()
                       false,                        //no boolean operation
                       0);                            //copy number
 
+}
+
+
+void WLS_TestDetectorConstruction::ConstructFullTentReflector()
+{
+    // Reflector Wrapping
+    G4Box* BottomSolid = new G4Box("BottomReflector",2*fParams->cell_size().x(),0.1*cm,fParams->cell_size().z());
+    
+    
+    G4double topReflRad = 2.*fParams->cell_size().x();
+    G4Tubs* TopSolid = new G4Tubs("InnerReflector",topReflRad,topReflRad+.1*cm,fParams->cell_size().z(),.215*pi,.57*pi);
+
+    G4UnionSolid* SolidReflector = new G4UnionSolid("Reflector", BottomSolid, TopSolid,0,G4ThreeVector(0.,-5./8.*topReflRad,0.));
+    
+    
+    G4LogicalVolume* Reflector_Log = new G4LogicalVolume(SolidReflector, G4Material::GetMaterial("PMMA"), "Reflector");
+    
+    
+    // Photon Energies for which mirror properties will be given
+    const G4int kEnergies = 3;
+    G4double the_photon_energies_[kEnergies] = {2.034*eV, 4.136*eV, 16*eV};
+    
+    // Optical Surface for mirror
+    G4OpticalSurface* mirror_surface_ =
+    new G4OpticalSurface("MirrorSurface", glisur, groundfrontpainted,
+                         dielectric_dielectric);
+    
+    // Reflectivity of mirror for each photon energy
+    G4double mirror_REFL[kEnergies] = {0.998, 0.998, 0.998};
+    
+    //Table of Surface Properties for Mirror
+    G4MaterialPropertiesTable* mirrorSurfaceProperty = new G4MaterialPropertiesTable();
+    mirrorSurfaceProperty->AddProperty("REFLECTIVITY", the_photon_energies_, mirror_REFL, kEnergies);
+    mirror_surface_->SetMaterialPropertiesTable(mirrorSurfaceProperty);
+    
+    new G4LogicalSkinSurface("Reflector_surface", Reflector_Log, mirror_surface_);
+    
+    
+    G4VisAttributes* ReflectVis=new G4VisAttributes(G4Color(1.0,1.0,1.0));
+    ReflectVis->SetVisibility(true);
+    ReflectVis->SetForceWireframe(true);
+    Reflector_Log->SetVisAttributes(ReflectVis);
+    
+    G4ThreeVector reflectorPos = G4ThreeVector(0.,-2*fParams->cell_size().y(),0.);
+    
+    new G4PVPlacement(0,                            //no rotation
+                      reflectorPos,              //at (0,0,0)
+                      Reflector_Log,                     //its logical volume
+                      "Reflector",            //its name
+                      fExperimentalHall_log,                //its mother  volume
+                      false,                        //no boolean operation
+                      0);                            //copy number
+    
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
