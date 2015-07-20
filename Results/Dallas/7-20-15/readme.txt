@@ -1,0 +1,1 @@
+Runs were done using the "tent" geometry from last summer. A beam of 250 nm light was incident on the center of the TPB-coated side of the cell wall. The fiber reflectors and the tent reflector were turned on and off in the different runs. Fibers were embedded in all runs. One million photons were used for each run. 
