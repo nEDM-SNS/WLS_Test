@@ -291,11 +291,11 @@ void WLS_TestMaterials::CreateMaterials()
     assert(sizeof(refractiveIndexWLSfiber) == sizeof(photonEnergy));
 
     G4double absfiber[] =
-    {20.*m, 20.*m,20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
-        20.*m, 20.*m,20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
-        20.*m, 20.*m,20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
-        20.*m, 20.*m,20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
-        20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m};
+    {7.5*m, 7.5*m,7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m,
+        7.5*m, 7.5*m,7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m,
+	7.5*m, 7.5*m,7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m,
+	7.5*m, 7.5*m,7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m,
+	7.5*m, 7.5*m,7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m};
 
     assert(sizeof(absfiber) == sizeof(photonEnergy));
   
@@ -346,11 +346,11 @@ void WLS_TestMaterials::CreateMaterials()
     assert(sizeof(refractiveIndexClad1) == sizeof(photonEnergy));
     
     G4double absClad[] =
-    {20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,
-        20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,
-        20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,
-        20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,
-        20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,20.0*m,20.0*m};
+    {7.5*m, 7.5*m,7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m,
+        7.5*m, 7.5*m,7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m,
+	7.5*m, 7.5*m,7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m,
+	7.5*m, 7.5*m,7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m,
+	7.5*m, 7.5*m,7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m, 7.5*m};
     
     assert(sizeof(absClad) == sizeof(photonEnergy));
     
@@ -462,7 +462,7 @@ void WLS_TestMaterials::CreateMaterials()
 //    mptTPBDopedPS->AddProperty("ABSLENGTH",photonEnergy,absPMMA,nEntries);
     
     // This property triggers the TPB process
-    mptTPBDopedPS->AddConstProperty("TPBCONVERSIONEFFICIENCY", 0.24);
+    mptTPBDopedPS->AddConstProperty("TPBCONVERSIONEFFICIENCY", 0.33);
     
     fTPBDopedPS->SetMaterialPropertiesTable(mptTPBDopedPS);
 

@@ -22,7 +22,7 @@ void NedmDetectorParameters::SetDefaults() {
     tpb_layer_on_ = true;
     embedded_fibers_ = true;
     fiber_reflector_ = false;
-    outer_reflector_ = true;
+    outer_reflector_ = false;
     
     num_fibers_ = 98;
     //num_fibers_ = 5;
