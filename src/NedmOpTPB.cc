@@ -13,7 +13,7 @@
 #include "G4TransportationManager.hh"
 
 
-const G4double NedmOpTPB::the_euv_cutoff_ = 10*eV;
+const G4double NedmOpTPB::the_euv_cutoff_ = 4.9*eV;
 const G4double NedmOpTPB::the_tpb_photon_energy_ = 2.95*eV;
 const G4double NedmOpTPB::the_mean_penetration_length_ = 30.0 * nm;
 const G4double NedmOpTPB::the_depth_cutoff_in_MFPs_ = 1.5;
