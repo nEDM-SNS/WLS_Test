@@ -228,6 +228,35 @@ void WLS_TestMaterials::CreateMaterials()
     //  370.1,  366.8,  363.6,  360.4,  357.3}
 
     const G4int nEntries = sizeof(photonEnergy)/sizeof(G4double);
+
+
+    G4double acrylicPhotonEnergy[] =
+    {1.96*eV,2.02*eV,2.08*eV,2.14*eV,2.20*eV,
+        2.26*eV,2.32*eV,2.38*eV,2.44*eV,2.50*eV,
+	2.56*eV,2.62*eV,2.68*eV,2.74*eV,2.80*eV,
+	2.86*eV,2.92*eV,2.98*eV,3.04*eV,3.10*eV,
+	3.16*eV,3.22*eV,3.28*eV,3.34*eV,3.40*eV,
+	3.46*eV,3.52*eV,3.58*eV,3.64*eV,3.70*eV,
+	3.76*eV,3.82*eV,3.88*eV,3.94*eV,4.00*eV,
+	4.06*eV,4.12*eV,4.18*eV,4.24*eV,4.30*eV,
+	4.36*eV,4.42*eV,4.48*eV,4.54*eV,4.60*eV,
+	4.66*eV,4.72*eV,4.78*eV,4.84*eV,4.90*eV,
+	4.96*eV,5.02*eV,5.08*eV,5.14*eV,5.20*eV};
+
+    // Wavelength conversion (nm)
+    // {632.6,  613.8,  596.1,  579.4,  563.6,
+    //  548.6,  534.4,  520.9,  508.1,  495.9,
+    //  484.3,  473.2,  462.6,  452.5,  442.8,
+    //  433.5,  424.6,  416.1,  407.8,  399.9,
+    //  392.4,  385.0,  378.0,  371.2,  364.7,
+    //  358.3,  352.2,  346.2,  340.6,  335.1,
+    //  329.7,  324.6,  319.5,  314.7,  310.0,
+    //  305.4,  300.9,  296.6,  292.4,  288.3,
+    //  284.4,  280.5,  276.8,  273.1,  269.5,
+    //  266.1,  262.7,  259.4,  256.2,  253.0,
+    //  250.0,  247.0,  244.1,  241.2,  238.4}
+
+    const G4int nEntriesAcr = sizeof(acrylicPhotonEnergy)/sizeof(G4double);
     
     //--------------------------------------------------
     // Air
@@ -256,24 +285,26 @@ void WLS_TestMaterials::CreateMaterials()
         1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60,
         1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60,
         1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60,
-        1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60};
+        1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60, 1.60,
+	1.60, 1.60, 1.60, 1.60, 1.60};
     
-    assert(sizeof(refractiveIndexPMMA) == sizeof(photonEnergy));
+    assert(sizeof(refractiveIndexPMMA) == sizeof(acrylicPhotonEnergy));
 
     G4double absPMMA[] =
-    {20.*m, 20.*m,20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
-        20.*m, 20.*m,20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
-        20.*m, 20.*m,20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
-        20.*m, 20.*m,20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
-        20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m};
+    {20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
+        20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
+        20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
+        20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
+        20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m, 20.*m,
+	20.*m, 20.*m, 20.*m, 20.*m, 20.*m};
     
-    assert(sizeof(absPMMA) == sizeof(photonEnergy));
+    assert(sizeof(absPMMA) == sizeof(acrylicPhotonEnergy));
 
     // Add entries into properties table
     G4MaterialPropertiesTable* mptPMMA = new G4MaterialPropertiesTable();
     mptPMMA->
-    AddProperty("RINDEX",photonEnergy,refractiveIndexPMMA,nEntries);
-    mptPMMA->AddProperty("ABSLENGTH",photonEnergy,absPMMA,nEntries);
+    AddProperty("RINDEX",acrylicPhotonEnergy,refractiveIndexPMMA,nEntriesAcr);
+    mptPMMA->AddProperty("ABSLENGTH",acrylicPhotonEnergy,absPMMA,nEntriesAcr);
 
     fPMMA->SetMaterialPropertiesTable(mptPMMA);
 
