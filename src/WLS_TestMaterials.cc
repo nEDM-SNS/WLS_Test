@@ -1,12 +1,12 @@
-#include "NedmMaterials.hh"
+#include "WLS_TestMaterials.hh"
 
 #include "G4SystemOfUnits.hh"
 
-NedmMaterials* NedmMaterials::fInstance = 0;
+WLS_TestMaterials* WLS_TestMaterials::fInstance = 0;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-NedmMaterials::NedmMaterials()
+WLS_TestMaterials::WLS_TestMaterials()
 {
     fNistMan = G4NistManager::Instance();
     
@@ -17,7 +17,7 @@ NedmMaterials::NedmMaterials()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-NedmMaterials::~NedmMaterials()
+WLS_TestMaterials::~WLS_TestMaterials()
 {
     delete    fPMMA;
     delete    fWLSPMMA;
@@ -32,18 +32,18 @@ NedmMaterials::~NedmMaterials()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-NedmMaterials* NedmMaterials::GetInstance()
+WLS_TestMaterials* WLS_TestMaterials::GetInstance()
 {
     if (fInstance == 0)
     {
-        fInstance = new NedmMaterials();
+        fInstance = new WLS_TestMaterials();
     }
     return fInstance;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4Material* NedmMaterials::GetMaterial(const G4String material)
+G4Material* WLS_TestMaterials::GetMaterial(const G4String material)
 {
     G4Material* mat =  fNistMan->FindOrBuildMaterial(material);
     
@@ -51,7 +51,7 @@ G4Material* NedmMaterials::GetMaterial(const G4String material)
     if (!mat) {
         std::ostringstream o;
         o << "Material " << material << " not found!";
-        G4Exception("NedmMaterials::GetMaterial","",
+        G4Exception("WLS_TestMaterials::GetMaterial","",
                     FatalException,o.str().c_str());
     }
     
@@ -60,7 +60,7 @@ G4Material* NedmMaterials::GetMaterial(const G4String material)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void NedmMaterials::CreateMaterials()
+void WLS_TestMaterials::CreateMaterials()
 {
     G4double density;
     G4int ncomponents;
