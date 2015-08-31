@@ -31,7 +31,7 @@ NedmCellSide::NedmCellSide(G4RotationMatrix* pRot,
                new G4LogicalVolume(new G4Box("temp",1,1,1),
                                    G4Material::GetMaterial("Vacuum"),
                                    "temp",0,0,0),
-               "CellSide", pMotherLogical, false, copyNo,false) {
+               "CellSide", pMotherLogical, false, copyNo) {
     
     CopyValues();
     
@@ -66,25 +66,50 @@ void NedmCellSide::ConstructTPBInterface() {
                                           fTPB_Thickness,
                                           fCell_Size.z());
     
-    G4LogicalVolume* TPBInterface_log = new G4LogicalVolume(TPBInterface_solid,G4Material::GetMaterial("TPBDopedPS"),"TPBInterface");
+    G4LogicalVolume* TPBInterface_log = new G4LogicalVolume(TPBInterface_solid,G4Material::GetMaterial("TPB_inner"),"TPBInterface");
 
     G4ThreeVector TPBInterface_pos = G4ThreeVector(0.,fCell_Size.y()-fTPB_Thickness,0.);
     
     new G4PVPlacement(0,TPBInterface_pos,
                         TPBInterface_log,
                         "TPBInterface",
-                        fCellSide_log,false,0,false);
+                        fCellSide_log,false,0);
     
     G4VisAttributes* tpbVis=new G4VisAttributes(G4Color(1.0,0.0,1.0));
     tpbVis->SetVisibility(true);
     TPBInterface_log->SetVisAttributes(tpbVis);
 
     
+    // Create outer TPB layer with low index of refraction
+    
+    G4double TPB_outerThickness = fTPB_outerFraction*fTPB_Thickness;
+    
+    G4Box* TPBInterface_outer_solid = new G4Box("TPBInterface_outer",
+                                          fCell_Size.x(),
+                                          TPB_outerThickness,
+                                          fCell_Size.z());
+
+    
+    G4LogicalVolume* TPBInterface_outer_log = new G4LogicalVolume(TPBInterface_outer_solid,G4Material::GetMaterial("TPB_outer"),"TPBInterface_outer");
+    
+    G4ThreeVector TPBInterface_outer_pos = G4ThreeVector(0.,fTPB_Thickness-TPB_outerThickness,0.);
+    
+    new G4PVPlacement(0,TPBInterface_outer_pos,
+                      TPBInterface_outer_log,
+                      "TPBInterface_outer",
+                      TPBInterface_log,false,0);
+    
+    G4VisAttributes* tpbOuterVis=new G4VisAttributes(G4Color(1.0,1.0,0.0));
+    tpbOuterVis->SetVisibility(true);
+    TPBInterface_outer_log->SetVisAttributes(tpbOuterVis);
+
+
+
 }
 
 void NedmCellSide::ConstructEmbeddedFibers() {
     
-    G4double Y_pos = -1*(fCell_Size.y()-fFiber_Thickness/2-.005*cm);
+    G4double Y_pos = -1*(fCell_Size.y()-fFiber_Thickness/2-0.001*cm);
     
     for(G4int i=0;i<fNum_fibers;i++){
         G4double X_pos=-(fFiber_spacing)*(fNum_fibers-1)*0.5 + i*fFiber_spacing;
@@ -102,6 +127,8 @@ void NedmCellSide::CopyValues()
     
     // Arbitrary thickness for now, shouldn't have effect, fix later
     fTPB_Thickness = 0.001*cm;
+    // Thickness of TPB layer outside optical medium
+    fTPB_outerFraction = 0.1;
     
     fEmbedded_fibers = params->embedded_fibers();
     fTPB_On = params->tpb_layer_on();
