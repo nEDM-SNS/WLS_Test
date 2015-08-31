@@ -31,7 +31,7 @@ NedmCellSide::NedmCellSide(G4RotationMatrix* pRot,
                new G4LogicalVolume(new G4Box("temp",1,1,1),
                                    G4Material::GetMaterial("Vacuum"),
                                    "temp",0,0,0),
-               "CellSide", pMotherLogical, false, copyNo) {
+               "CellSide", pMotherLogical, false, copyNo,false) {
     
     CopyValues();
     
@@ -73,7 +73,7 @@ void NedmCellSide::ConstructTPBInterface() {
     new G4PVPlacement(0,TPBInterface_pos,
                         TPBInterface_log,
                         "TPBInterface",
-                        fCellSide_log,false,0);
+                        fCellSide_log,false,0,false);
     
     G4VisAttributes* tpbVis=new G4VisAttributes(G4Color(1.0,0.0,1.0));
     tpbVis->SetVisibility(true);
@@ -84,7 +84,7 @@ void NedmCellSide::ConstructTPBInterface() {
 
 void NedmCellSide::ConstructEmbeddedFibers() {
     
-    G4double Y_pos = -1*(fCell_Size.y()-fFiber_Thickness/2-0.001*cm);
+    G4double Y_pos = -1*(fCell_Size.y()-fFiber_Thickness/2-.005*cm);
     
     for(G4int i=0;i<fNum_fibers;i++){
         G4double X_pos=-(fFiber_spacing)*(fNum_fibers-1)*0.5 + i*fFiber_spacing;

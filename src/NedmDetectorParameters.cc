@@ -20,13 +20,13 @@ void NedmDetectorParameters::SetDefaults() {
     
     cell_wall_on_ = true;
     tpb_layer_on_ = true;
-    embedded_fibers_ = true;
+    embedded_fibers_ = false;
     fiber_reflector_ = false;
     outer_reflector_ = true;
     
     num_fibers_ = 98;
     //num_fibers_ = 5;
     fiber_thick_ = 0.100*cm;
-    fiber_spacing_ = 0.101*cm;
+    fiber_spacing_ = 0.103*cm;
     
 }

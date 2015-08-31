@@ -37,10 +37,13 @@ class WLS_TestDetectorConstruction : public G4VUserDetectorConstruction
     void ConstructCellPlates();
     void ConstructSquareTubeReflector();
     void ConstructFullTentReflector();
+    void ConstructPhotonDet();
     
     G4Box* fExperimentalHall_box;
     G4LogicalVolume* fExperimentalHall_log;
     G4VPhysicalVolume* fExperimentalHall_phys;
+    
+    G4bool overlapCheck;
     
 
     

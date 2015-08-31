@@ -10,6 +10,9 @@
 #include "G4ParallelWorldProcess.hh"
 #include "G4TransportationManager.hh"
 
+#include "G4PhysicalConstants.hh"
+#include "G4SystemOfUnits.hh"
+
 
 
 void WLS_TestSteppingAction::UserSteppingAction(const G4Step* aStep)
@@ -23,32 +26,39 @@ void WLS_TestSteppingAction::UserSteppingAction(const G4Step* aStep)
 #endif
 
     
-    // get point of entry and exit
-    const G4StepPoint *p_in  = aStep->GetPreStepPoint();
-    const G4StepPoint *p_out = aStep->GetPostStepPoint();
+    G4StepPoint* thePrePoint  = aStep->GetPreStepPoint();
+    G4StepPoint* thePostPoint = aStep->GetPostStepPoint();
+    
 
     // Ignore steps at world boundary
-    if (p_out->GetStepStatus()!= fWorldBoundary) {
-        G4LogicalVolume* inVol;
-        inVol = p_in->GetTouchableHandle()->GetVolume()->GetLogicalVolume();
+    if (thePostPoint->GetStepStatus()!= fWorldBoundary) {
+ 
+        G4VPhysicalVolume* thePrePV  = thePrePoint->GetPhysicalVolume();
+        G4VPhysicalVolume* thePostPV = thePostPoint->GetPhysicalVolume();
         
-        G4LogicalVolume* outVol;
-        outVol = p_out->GetTouchableHandle()->GetVolume()->GetLogicalVolume();
+        G4String thePrePVname  = " ";
+        G4String thePostPVname = " ";
         
-        if( (inVol->GetName() == "Fiber" || inVol->GetName() == "Mirror") && outVol->GetName() == "expHall_log") {
+        if (thePostPV) {
+            thePrePVname  = thePrePV->GetName();
+            thePostPVname = thePostPV->GetName();
+        }
+        
+#if 0
+        if( (thePrePVname == "Fiber" || thePrePVname == "Mirror") && (thePostPVname == "expHall") ) {
             G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
 
 
 //New default behavior is to record all photons that reach the end of the fiber, and read out the angle with which they HIT the fiber.  This should mimick optical coupling much better.
-            G4double cosTheta = p_in->GetMomentumDirection().z();
+            G4double cosTheta = thePrePoint->GetMomentumDirection().z();
             
-            if (p_out->GetPosition().z() > 0.) {
+            if (thePostPoint->GetPosition().z() > 0.) {
                 analysisManager->FillH1(0, 6);
                 analysisManager->FillH1(3, cosTheta);
                 aStep->GetTrack()->SetTrackStatus(fStopAndKill);
                 
             }
-            else if (p_out->GetPosition().z() < 0.)
+            else if (thePostPoint->GetPosition().z() < 0.)
             {
                 analysisManager->FillH1(0, 7);
                 analysisManager->FillH1(4, cosTheta);
@@ -65,21 +75,54 @@ void WLS_TestSteppingAction::UserSteppingAction(const G4Step* aStep)
             
             // For debugging above
             /*
-            G4cout << "Position: " << p_out->GetPosition() << G4endl;
-            G4cout << "PreStepMomDir: " <<  p_in->GetMomentumDirection() << G4endl;
-            G4cout << "PostStepMomDir: " <<  p_out->GetMomentumDirection() << G4endl;
+            G4cout << "Position: " << thePostPoint->GetPosition() << G4endl;
+            G4cout << "PreStepMomDir: " <<  thePrePoint->GetMomentumDirection() << G4endl;
+            G4cout << "PostStepMomDir: " <<  thePostPoint->GetMomentumDirection() << G4endl;
             
-            G4cout << "Step Process" << p_out->GetProcessDefinedStep()->GetProcessName() << G4endl;
+            G4cout << "Step Process" << thePostPoint->GetProcessDefinedStep()->GetProcessName() << G4endl;
              */
             
             
         }
+#else
+        if ((thePrePVname == "Fiber" || thePrePVname == "Mirror" || thePrePVname =="Cladding1" || thePrePVname == "Cladding2") && thePostPVname== "photDet1") {
+            G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+            G4double cosTheta = thePrePoint->GetMomentumDirection().z();
+            
+            analysisManager->FillH1(0, 6);
+            analysisManager->FillH1(3, cosTheta);
+            analysisManager->FillH1(6, h_Planck*c_light/thePrePoint->GetKineticEnergy()/nm);
+            analysisManager->FillH1(7, thePrePoint->GetKineticEnergy()/eV);
 
-        else if( (inVol->GetName() == "Cell" || inVol->GetName() == "TPBInterface") && outVol->GetName() == "expHall_log") {
+            aStep->GetTrack()->SetTrackStatus(fStopAndKill);
+
+        }
+        
+        else if ((thePrePVname == "Fiber" || thePrePVname == "Mirror" || thePrePVname =="Cladding1" || thePrePVname == "Cladding2") && thePostPVname=="photDet2")
+        {
+            G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+            G4double cosTheta = thePrePoint->GetMomentumDirection().z();
+
+            analysisManager->FillH1(0, 7);
+            analysisManager->FillH1(4, cosTheta);
+            analysisManager->FillH1(6, h_Planck*c_light/thePrePoint->GetKineticEnergy()/nm);
+            analysisManager->FillH1(7, thePrePoint->GetKineticEnergy()/eV);
+            
+            aStep->GetTrack()->SetTrackStatus(fStopAndKill);
+
+            aStep->GetTrack()->SetTrackStatus(fStopAndKill);
+
+        }
+
+        
+#endif
+        
+        
+        else if( (thePrePVname == "CellSide" || thePrePVname == "TPBInterface") && thePostPVname == "expHall") {
             
             G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
             
-            G4ThreeVector theGlobalPoint = p_out->GetPosition();
+            G4ThreeVector theGlobalPoint = thePostPoint->GetPosition();
             
             G4bool valid;
             //  Use the new method for Exit Normal in global coordinates,
@@ -105,7 +148,7 @@ void WLS_TestSteppingAction::UserSteppingAction(const G4Step* aStep)
             }
             
             G4double ReflectionCheck;
-            ReflectionCheck =p_in->GetMomentumDirection()*theGlobalNormal + p_out->GetMomentumDirection()*theGlobalNormal;
+            ReflectionCheck =thePrePoint->GetMomentumDirection()*theGlobalNormal + thePostPoint->GetMomentumDirection()*theGlobalNormal;
             
             if (ReflectionCheck>1.0e-12) {
                 
@@ -128,11 +171,11 @@ void WLS_TestSteppingAction::UserSteppingAction(const G4Step* aStep)
                 
                 /*
                 G4cout << "***GLobal Normal for Plate Exit***" << theGlobalNormal << G4endl;
-                G4cout << "Position: " << p_out->GetPosition() << G4endl;
-                G4cout << "PreStepMomDir: " <<  p_in->GetMomentumDirection() << G4endl;
-                G4cout << "PostStepMomDir: " <<  p_out->GetMomentumDirection() << G4endl;
-                G4cout << "Step Process: " << p_out->GetProcessDefinedStep()->GetProcessName() << G4endl;
-                G4cout << "Exit Trigger Attempt: " << p_in->GetMomentumDirection()*theGlobalNormal + p_out->GetMomentumDirection()*theGlobalNormal << G4endl;
+                G4cout << "Position: " << thePostPoint->GetPosition() << G4endl;
+                G4cout << "PreStepMomDir: " <<  thePrePoint->GetMomentumDirection() << G4endl;
+                G4cout << "PostStepMomDir: " <<  thePostPoint->GetMomentumDirection() << G4endl;
+                G4cout << "Step Process: " << thePostPoint->GetProcessDefinedStep()->GetProcessName() << G4endl;
+                G4cout << "Exit Trigger Attempt: " << thePrePoint->GetMomentumDirection()*theGlobalNormal + thePostPoint->GetMomentumDirection()*theGlobalNormal << G4endl;
                 G4cout << "TrackStatus: " << aStep->GetTrack()->GetTrackStatus() << G4endl;
                  */
             }
@@ -142,19 +185,19 @@ void WLS_TestSteppingAction::UserSteppingAction(const G4Step* aStep)
             
         }
 
-        else if (p_out->GetProcessDefinedStep()->GetProcessName() == "OpAbsorption")
+        else if (thePostPoint->GetProcessDefinedStep()->GetProcessName() == "OpAbsorption")
         {
             
             WLS_TestTrackInformation* trackInfo = (WLS_TestTrackInformation*)aStep->GetTrack()->GetUserInformation();
 
             
-            if( inVol->GetName() == "Cell" && outVol->GetName() == "Cell")
+            if( thePrePVname == "CellSide" && thePostPVname == "CellSide")
             {
                 //G4cout << "*****Absorption In Cell*****" << G4endl;
                 trackInfo->SetStatus(4);
             }
             
-            if( inVol->GetName() == "TPBInterface" && outVol->GetName() == "TPBInterface")
+            if( thePrePVname == "TPBInterface" && thePostPVname == "TPBInterface")
             {
                 //G4cout << "*****Absorption In TPBInterface*****" << G4endl;
                 trackInfo->SetStatus(5);

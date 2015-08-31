@@ -65,6 +65,13 @@ void WLS_TestRunAction::BeginOfRunAction(const G4Run* aRun)
    
     // index 5
     analysisManager->CreateH1("PhotonFate", "Bins: 0=Undefined, 1=X-Plate, 2=Y-Plate, 3=Z-Plate, 4=Cell Absorption, 5=TPB Absorption, 8=Trapped, 9=Not Trapped", 10, 0., 10.);
+    
+    // index 6
+    analysisManager->CreateH1("detSpectrum", "Wavelength of photons detected", 100, 300., 800.);
+    
+    // index 7
+    analysisManager->CreateH1("detEnergy", "Energy of photons detected", 100, 1., 4.);
+
 
 }
 

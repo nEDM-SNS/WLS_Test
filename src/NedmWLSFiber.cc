@@ -27,9 +27,11 @@ NedmWLSFiber::NedmWLSFiber(G4RotationMatrix *pRot,
                new G4LogicalVolume(new G4Box("temp",1,1,1),
                                    G4Material::GetMaterial("G4_AIR"),
                                    "temp",0,0,0),
-               "Cladding2",pMotherLogical,pMany,pCopyNo)
+               "Cladding2",pMotherLogical,pMany,pCopyNo,false)
 {
     CopyValues();
+    
+    G4bool overlapCheck = false;
     
     // Boundary Surface Properties
     G4OpticalSurface* opSurface = NULL;
@@ -76,9 +78,9 @@ NedmWLSFiber::NedmWLSFiber(G4RotationMatrix *pRot,
                         "Cladding2",0,0,0);
     
     new G4PVPlacement(0,G4ThreeVector(0.,0.,0.),fiber_log,
-                      "Fiber", clad1_log,false,0);
+                      "Fiber", clad1_log,false,0,overlapCheck);
     new G4PVPlacement(0,G4ThreeVector(0.,0.,0.),clad1_log,
-                      "Cladding1",fClad2_log,false,0);
+                      "Cladding1",fClad2_log,false,0,overlapCheck);
     
     // Place the rough surface only if needed
     if (opSurface) {
@@ -130,7 +132,7 @@ NedmWLSFiber::NedmWLSFiber(G4RotationMatrix *pRot,
                           //Clad2_log,                  //its mother  volume
                           fiber_log,                   //its mother  volume
                           false,                        //no boolean operation
-                          0);                           //copy number
+                          0,overlapCheck);             //copy number
         
         // Create Skin Surface to link logical surface and optical surface
         new G4LogicalSkinSurface("MirrorSurface",logicMirror,mirror_surface_);
