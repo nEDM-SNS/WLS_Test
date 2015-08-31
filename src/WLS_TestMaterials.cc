@@ -1,12 +1,12 @@
-#include "WLS_TestMaterials.hh"
+#include "NedmMaterials.hh"
 
 #include "G4SystemOfUnits.hh"
 
-WLS_TestMaterials* WLS_TestMaterials::fInstance = 0;
+NedmMaterials* NedmMaterials::fInstance = 0;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-WLS_TestMaterials::WLS_TestMaterials()
+NedmMaterials::NedmMaterials()
 {
     fNistMan = G4NistManager::Instance();
     
@@ -17,32 +17,33 @@ WLS_TestMaterials::WLS_TestMaterials()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-WLS_TestMaterials::~WLS_TestMaterials()
+NedmMaterials::~NedmMaterials()
 {
     delete    fPMMA;
     delete    fWLSPMMA;
     delete    fPethylene;
     delete    fFPethylene;
     delete    fPolystyrene;
-    delete    fTPBDopedPS;
+    delete    fTPB_outer;
+    delete    fTPB_inner;
     delete    fSilicone;
 
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-WLS_TestMaterials* WLS_TestMaterials::GetInstance()
+NedmMaterials* NedmMaterials::GetInstance()
 {
     if (fInstance == 0)
     {
-        fInstance = new WLS_TestMaterials();
+        fInstance = new NedmMaterials();
     }
     return fInstance;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4Material* WLS_TestMaterials::GetMaterial(const G4String material)
+G4Material* NedmMaterials::GetMaterial(const G4String material)
 {
     G4Material* mat =  fNistMan->FindOrBuildMaterial(material);
     
@@ -50,7 +51,7 @@ G4Material* WLS_TestMaterials::GetMaterial(const G4String material)
     if (!mat) {
         std::ostringstream o;
         o << "Material " << material << " not found!";
-        G4Exception("WLS_TestMaterials::GetMaterial","",
+        G4Exception("NedmMaterials::GetMaterial","",
                     FatalException,o.str().c_str());
     }
     
@@ -59,7 +60,7 @@ G4Material* WLS_TestMaterials::GetMaterial(const G4String material)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void WLS_TestMaterials::CreateMaterials()
+void NedmMaterials::CreateMaterials()
 {
     G4double density;
     G4int ncomponents;
@@ -151,7 +152,8 @@ void WLS_TestMaterials::CreateMaterials()
     natoms.clear();
     
     //--------------------------------------------------
-    // Tetraphenyl butadiene (TPB)
+    // Tetraphenyl butadiene (TPB) (inner and outer)
+    // Inner and outer have different Index of Refraction
     //--------------------------------------------------
     
     elements.push_back("C");     natoms.push_back(28);
@@ -159,12 +161,18 @@ void WLS_TestMaterials::CreateMaterials()
     
     density = 1.079*g/cm3;
     
-    G4Material* TPB = fNistMan->
-    ConstructNewMaterial("TPB", elements, natoms, density);
+    fTPB_outer = fNistMan->
+    ConstructNewMaterial("TPB_outer", elements, natoms, density);
     
     elements.clear();
     natoms.clear();
+
+    fTPB_inner = new G4Material("TPB_inner",density,fTPB_outer);
     
+    
+    
+    /*
+    Just use TPB for now. Is the following ever needed?
     //--------------------------------------------------
     // TPB doped PS matrix - 2% TPB and 98% polystyrene by weight.
     //--------------------------------------------------
@@ -177,6 +185,7 @@ void WLS_TestMaterials::CreateMaterials()
     
     fTPBDopedPS->AddMaterial(TPB,         fractionmass = 2*perCent);
     fTPBDopedPS->AddMaterial(fPolystyrene, fractionmass = 98*perCent);
+    */
     
     //--------------------------------------------------
     // Silicone (Template for Optical Grease)
@@ -296,7 +305,7 @@ void WLS_TestMaterials::CreateMaterials()
         50.*cm, 50.*cm, 50.*cm, 20.*cm, 20.*cm, 20.*cm, 20.*cm, 20.*cm, 20.*cm, 20.*cm,
         20.*cm, 20.*cm, 20.*cm, 20.*cm, 20.*cm, 10.*cm, 7.5*cm, 4.*cm, 1.*cm, 6.*mm,
         3.*mm, 2.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*nm, 1.*nm, 1.*nm, 1.*nm, 1.*nm,
-	1.*nm, 1.*nm, 1.*nm, 1.*nm, 1.*nm};
+        1.*nm, 1.*nm, 1.*nm, 1.*nm, 1.*nm};
     
     assert(sizeof(absPMMA) == sizeof(acrylicPhotonEnergy));
 
@@ -480,7 +489,61 @@ void WLS_TestMaterials::CreateMaterials()
     
     fPolystyrene->GetIonisation()->SetBirksConstant(0.126*mm/MeV);
     
+    //--------------------------------------------------
+    // Tetraphenyl butadiene (TPB) (inner and outer)
+    // Inner and outer have different Index of Refraction
+    //--------------------------------------------------
+
     
+    G4double absTPB[] =
+    {10.*m, 10.*m, 10.*m, 10.*m, 10.*m, 10.*m, 10.*m, 10.*m, 10.*m, 10.*m,
+        5.*m, 5.*m, 5.*m, 5.*m, 5.*m, 1.*m, 1.*m, 1.*m, 1.*m, 1.*m,
+        50.*cm, 50.*cm, 50.*cm, 20.*cm, 20.*cm, 20.*cm, 20.*cm, 20.*cm, 20.*cm, 20.*cm,
+        20.*cm, 20.*cm, 20.*cm, 20.*cm, 20.*cm, 10.*cm, 7.5*cm, 4.*cm, 1.*cm, 6.*mm,
+        3.*mm, 2.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*nm, 1.*nm, 1.*nm, 1.*nm, 1.*nm,
+        1.*nm, 1.*nm, 1.*nm, 1.*nm, 1.*nm};
+    
+    assert(sizeof(absTPB) == sizeof(acrylicPhotonEnergy));
+
+    G4double absWLSTPB[] =
+    {10.*m, 10.*m, 10.*m, 10.*m, 10.*m, 10.*m, 10.*m, 10.*m, 10.*m, 10.*m,
+        5.*m, 5.*m, 5.*m, 5.*m, 5.*m, 1.*m, 1.*m, 1.*m, 1.*m, 1.*m,
+        50.*cm, 50.*cm, 50.*cm, 20.*cm, 20.*cm, 20.*cm, 20.*cm, 20.*cm, 20.*cm, 20.*cm,
+        20.*cm, 20.*cm, 20.*cm, 20.*cm, 20.*cm, 10.*cm, 7.5*cm, 4.*cm, 1.*cm, 6.*mm,
+        3.*mm, 2.*mm, 1.*mm, 1.*mm, 1.*mm, 1.*nm, 1.*nm, 1.*nm, 1.*nm, 1.*nm,
+        1.*nm, 1.*nm, 1.*nm, 1.*nm, 1.*nm};
+    
+    assert(sizeof(absWLSTPB) == sizeof(acrylicPhotonEnergy));
+    
+    G4double emissionTPB[] =
+    {0.05, 0.06, 0.13, 0.19, 0.28, 0.37, 0.53, 0.64, 1.00, 1.40,
+        1.90, 2.20, 2.30, 2.53, 3.10, 4.30, 5.00, 4.60, 3.00, 1.00,
+        0.14, 0.05, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+        0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+        0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+        0.00, 0.00, 0.00, 0.00, 0.00};
+    
+    assert(sizeof(emissionTPB) == sizeof(acrylicPhotonEnergy));
+
+
+    G4MaterialPropertiesTable* mptTPB_inner = new G4MaterialPropertiesTable();
+    mptTPB_inner->AddProperty("RINDEX", photonEnergy, refractiveIndexPMMA, nEntries);
+    mptTPB_inner->AddProperty("ABSLENGTH", acrylicPhotonEnergy, absTPB, nEntriesAcr);
+    mptTPB_inner->AddProperty("WLSABSLENGTH", acrylicPhotonEnergy, absWLSTPB, nEntriesAcr);
+    mptTPB_inner->AddProperty("WLSCOMPONENT", acrylicPhotonEnergy, emissionTPB, nEntriesAcr);
+    mptTPB_inner->AddConstProperty("WLSTIMECONSTANT", 0.01*ns);
+    fTPB_inner->SetMaterialPropertiesTable(mptTPB_inner);
+    
+    
+    G4MaterialPropertiesTable* mptTPB_outer = new G4MaterialPropertiesTable();
+    mptTPB_outer->AddProperty("RINDEX", photonEnergy, refractiveIndex, nEntries);
+    mptTPB_outer->AddProperty("ABSLENGTH", acrylicPhotonEnergy, absTPB, nEntriesAcr);
+    mptTPB_outer->AddProperty("WLSABSLENGTH", acrylicPhotonEnergy, absWLSTPB, nEntriesAcr);
+    mptTPB_outer->AddProperty("WLSCOMPONENT", acrylicPhotonEnergy, emissionTPB, nEntriesAcr);
+    mptTPB_outer->AddConstProperty("WLSTIMECONSTANT", 0.01*ns);
+    fTPB_outer->SetMaterialPropertiesTable(mptTPB_outer);
+
+/* Not used anymore
     //--------------------------------------------------
     // TPB doped PS matrix - 2% TPB and 98% polystyrene by weight.
     //--------------------------------------------------
@@ -497,5 +560,51 @@ void WLS_TestMaterials::CreateMaterials()
     
     fTPBDopedPS->SetMaterialPropertiesTable(mptTPBDopedPS);
 
+    // Define TPB optical properties
+    const G4int nTPBEntries = 25;
+    const G4int nSiO2Entries = 20;
+  
+    G4double SiO2Energy[nSiO2Entries] =
+    {0.602*eV, 0.689*eV, 1.03*eV,  1.926*eV,
+        2.583*eV, 2.845*eV, 2.857*eV, 3.124*eV,
+        3.457*eV, 3.643*eV, 3.812*eV, 4.086*eV,
+        4.511*eV, 4.953*eV, 5.474*eV, 6.262*eV,
+        7.000*eV, 8.300*eV, 10.00*eV, 12.60*eV };
+    
+    G4double SiO2RefractiveIndex[nSiO2Entries] =
+    { 1.520,    1.5241,   1.5323,   1.5423,
+        1.550118, 1.553790, 1.55396, 1.55813,
+        1.563915, 1.56747, 1.570915, 1.57955,
+        1.58752, 1.60032, 1.61818, 1.65087,
+        1.698, 1.877, 2.581, 1.390 };
+
+    G4double TPBEnergy[nTPBEntries] =
+    {0.602*eV, 0.689*eV, 1.03*eV,  1.926*eV, 2.138*eV, 2.25*eV, 2.38*eV, 2.48*eV,
+        2.583*eV, 2.845*eV, 2.857*eV, 2.95*eV, 3.124*eV,
+        3.457*eV, 3.643*eV, 3.812*eV, 4.086*eV,
+        4.511*eV, 4.953*eV, 5.474*eV, 6.262*eV,
+        7.000*eV, 8.300*eV, 10.00*eV, 12.60*eV };
+    
+    G4double TPBAbsorption[nSiO2Entries] =
+    { 100000*m, 100000*m, 100000*m, 100000*m,
+        100000*m, 100000*m, 100000*m, 100000*m,
+        100000*m, 100000*m, 100000*m, 100000*m,
+        100000*m, 100000*m, 100000*m, 0.001*nm,
+        0.001*nm, 0.001*nm, 0.001*nm, 0.001*nm };
+    
+    G4double TPBEmission[nTPBEntries] =
+    { 0, 0, 0, 0, 0.0005, 0.0015, 0.003, 0.005,
+        0.007, 0.011, 0.011, 0.006, 0.002,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0 };
+    
+    G4MaterialPropertiesTable* fTPBMat = new G4MaterialPropertiesTable();
+    fTPBMat->AddProperty("RINDEX", SiO2Energy, SiO2RefractiveIndex, nSiO2Entries);
+    fTPBMat->AddProperty("WLSABSLENGTH", SiO2Energy, TPBAbsorption, nSiO2Entries);
+    fTPBMat->AddProperty("WLSCOMPONENT", TPBEnergy, TPBEmission, nTPBEntries);
+    fTPBMat->AddConstProperty("WLSTIMECONSTANT", 0.01*ns);
+    TPB->SetMaterialPropertiesTable( fTPBMat );
+*/
 
 }

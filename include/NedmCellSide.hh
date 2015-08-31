@@ -27,15 +27,14 @@ class NedmCellSide : public G4PVPlacement {
     
     G4ThreeVector fCell_Size;
     G4double fTPB_Thickness;
+    G4double fTPB_outerFraction;
  
     G4bool fTPB_On;
     G4bool fEmbedded_fibers;
     G4bool fFiber_Reflector;
-    G4double fFiber_spacing;
+    G4bool fFiber_spacing;
     G4int fNum_fibers;
     G4double fFiber_Thickness;
-    
-
     
 
 };
