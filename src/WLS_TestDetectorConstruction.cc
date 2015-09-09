@@ -228,7 +228,7 @@ void WLS_TestDetectorConstruction::ConstructFullTentReflector()
                          dielectric_dielectric);
     
     // Reflectivity of mirror for each photon energy
-    G4double mirror_REFL[kEnergies] = {0.998, 0.998, 0.998};
+    G4double mirror_REFL[kEnergies] = {0.96, 0.96, 0.96};
     
     //Table of Surface Properties for Mirror
     G4MaterialPropertiesTable* mirrorSurfaceProperty = new G4MaterialPropertiesTable();
