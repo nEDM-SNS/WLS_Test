@@ -60,11 +60,12 @@ void WLS_TestTrackingAction::PostUserTrackingAction(const G4Track * aTrack)
     G4int status = trackInfo->GetStatus();
     
     analysisManager->FillH1(5, status);
+
     if (status == 3 || status ==4 || status == 5) {
-        analysisManager->FillH1(5, 8);
+        analysisManager->FillH1(5, 9);
     }
     else if (status == 1 || status ==2)
     {
-        analysisManager->FillH1(5, 9);
+        analysisManager->FillH1(5, 8);
     }
 }
