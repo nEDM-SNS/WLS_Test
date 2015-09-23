@@ -52,10 +52,10 @@ void WLS_TestRunAction::BeginOfRunAction(const G4Run* aRun)
     analysisManager->CreateH1("Photons", "Bins: 1=Primaries, 2=TPB_Inner, 3=TPB_Outer, 4=TPB_All, 5=OtherWLSPhotons, 6=fiber +z end, 7=fiber -z end", 10, 0., 10.);
     
     // index 1
-    analysisManager->CreateH1("wlsSpectrum", "Wavelength of photons produced in green fibers", 100, 300., 800.);
+    analysisManager->CreateH1("wlsFibSpectrum", "Wavelength of photons produced in fibers", 100, 300., 800.);
     
     // index 2
-    analysisManager->CreateH1("wlsEnergy", "Energy of photons produced in green fibers", 100, 1., 4.);
+    analysisManager->CreateH1("wlsTPBSpectrum", "EWavelength of photons produced in TPB", 100, 300., 800.);
     
     // index 3
     analysisManager->CreateH1("cosThetaPosz", "Cosine of the exit angle for +z end of fiber", 100, -1.001, 1.001);
@@ -72,6 +72,7 @@ void WLS_TestRunAction::BeginOfRunAction(const G4Run* aRun)
     // index 7
     analysisManager->CreateH1("detEnergy", "Energy of photons detected", 100, 1., 4.);
 
+    
 
 }
 
