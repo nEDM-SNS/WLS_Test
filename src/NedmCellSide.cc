@@ -128,7 +128,7 @@ void NedmCellSide::CopyValues()
     // Arbitrary thickness for now, shouldn't have effect, fix later
     fTPB_Thickness = 0.001*cm;
     // Thickness of TPB layer outside optical medium
-    fTPB_outerFraction = 0.99;
+    fTPB_outerFraction = 0.1;
     
     fEmbedded_fibers = params->embedded_fibers();
     fTPB_On = params->tpb_layer_on();

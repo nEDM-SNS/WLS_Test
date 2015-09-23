@@ -122,7 +122,7 @@ void WLS_TestDetectorConstruction::ConstructCellPlates()
     // Create Cell Wall
     if (fParams->cell_wall_on())
     {
-        new NedmCellSide(rotX,G4ThreeVector(0.,0.,0.),fExperimentalHall_log,0);
+        new NedmCellSide(0,G4ThreeVector(0.,0.,0.),fExperimentalHall_log,0);
         
         if (fParams->embedded_fibers()==false)
         {

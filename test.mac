@@ -4,13 +4,13 @@
 /gps/energy 12 eV
 
 
-#/gps/ang/type beam1d
-/gps/ang/type iso
-#/gps/direction 0 -1 0
+/gps/ang/type beam1d
+#/gps/ang/type iso
+/gps/direction 0 -1 0
 #/gps/direction 1 0 0
 /gps/polarization 0 0 1 # dummy polarization
 
-/gps/position 0 -0.650 0 cm # Just below cell
+/gps/position 0 0.650 0 cm # Just below cell
 #/gps/position 0 0 0 cm # Center of cell
 /WLS_Test/run/setFileName Test
-/run/beamOn 100
+/run/beamOn 10000
