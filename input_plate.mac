@@ -1,7 +1,7 @@
 /gps/particle opticalphoton
 #/gps/energy 2.01 eV #Low energy photon
-/gps/energy 2.95 eV #blue photon
-#/gps/energy 12 eV
+#/gps/energy 2.95 eV #blue photon
+/gps/energy 12 eV
 #/gps/energy 4.96 eV #250 nm
 
 

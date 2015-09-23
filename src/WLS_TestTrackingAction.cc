@@ -28,18 +28,31 @@ void WLS_TestTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
     else if(aTrack->GetParentID()>0){
         // particle is secondary
         
-        if(aTrack->GetCreatorProcess()->GetProcessName()=="OpTPB")
-        {
-            analysisManager->FillH1(0, 2);
-        }
         
-        else if(aTrack->GetCreatorProcess()->GetProcessName()=="OpWLS")
-        {
-            analysisManager->FillH1(0, 5);
+        if (aTrack->GetCreatorProcess()->GetProcessName() == "OpWLS") {
             analysisManager->FillH1(1, h_Planck*c_light/aTrack->GetDynamicParticle()->GetKineticEnergy()/nm);
             analysisManager->FillH1(2, aTrack->GetDynamicParticle()->GetKineticEnergy()/eV);
-        }
 
+            
+            if (aTrack->GetOriginTouchable()->GetVolume()->GetName()=="TPBInterface") {
+                analysisManager->FillH1(0, 2);
+                analysisManager->FillH1(0, 4);
+            }
+            else if (aTrack->GetOriginTouchable()->GetVolume()->GetName()=="TPBInterface_outer")
+            {
+                analysisManager->FillH1(0, 3);
+                analysisManager->FillH1(0, 4);
+            }
+            else
+            {
+                analysisManager->FillH1(0, 5);
+            }
+            
+        }
+        else{
+            G4cout << "Process Name = " << aTrack->GetCreatorProcess()->GetProcessName() << G4endl;
+        }
+        
         
     }
     
