@@ -510,8 +510,8 @@ void WLS_TestMaterials::CreateMaterials()
          1.*km, 1.*km, 1.*km, 1.*km, 1.*km, 1.*km, 1.*km, 1.*km, 1.*km, 1.*km,
          0.045*mm, 0.027*mm, 0.01*mm, 0.01*mm, 0.01*mm, 0.01*mm, 0.01*mm, 0.01*mm, 0.01*mm, 0.01*mm,
          0.01*mm, 10.*m, 10.*m, 10.*m, 10.*m, 0.027*mm, 0.027*mm, 0.027*mm, 10.*m, 10.*m,
-         10.*m, 10.*m, 10.*m, 10.*m, .05*mm, .05*mm, .05*mm, .05*mm, .05*mm, .05*mm,
-         .05*mm, .05*mm, .05*mm, .05*mm, .05*mm};
+         10.*m, 10.*m, 10.*m, 10.*m, .048*mm, .048*mm, .048*mm, .048*mm, .048*mm, .048*mm,
+         .048*mm, .048*mm, .048*mm, .048*mm, .048*mm};
 
          assert(sizeof(absWLSTPB) == sizeof(acrylicPhotonEnergy));
     

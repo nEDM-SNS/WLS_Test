@@ -1,13 +1,13 @@
 /gps/particle opticalphoton
 #/gps/energy 2.01 eV #Low energy photon
 #/gps/energy 2.95 eV #blue photon
-/gps/energy 12 eV
-#/gps/energy 4.96 eV #250 nm
+#/gps/energy 12 eV
+/gps/energy 4.96 eV #250 nm
 
 
 /gps/ang/type beam1d
 #/gps/ang/type iso
-/gps/direction 0 1 0
+/gps/direction 0 -1 0
 #/gps/direction 1 0 0
 /gps/polarization 0 0 1 # dummy polarization
 
@@ -23,6 +23,6 @@
 
 
 
-/gps/position 0 -0.650 0 cm # 
-/WLS_Test/run/setFileName output/TPB_PSproperties_abovePlate
+/gps/position 0 0.650 0 cm # 
+/WLS_Test/run/setFileName Test
 /run/beamOn 10000
