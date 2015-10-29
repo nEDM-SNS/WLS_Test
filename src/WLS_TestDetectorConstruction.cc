@@ -271,6 +271,7 @@ void WLS_TestDetectorConstruction::ConstructPhotonDet(){
     else
     {
         YPos =fParams->cell_size().y()+fParams->fiber_thick()/2+.005;
+//	YPos =0*mm;
     }
     G4double ZPos = fParams->cell_size().z() + .1*mm;
     
