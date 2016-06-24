@@ -35,8 +35,8 @@ class WLS_TestDetectorConstruction : public G4VUserDetectorConstruction
     
     G4VPhysicalVolume* ConstructDetector();
     void ConstructCellPlates();
-    void ConstructSquareTubeReflector();
-    void ConstructFullTentReflector();
+    void ConstructCylindricalReflector();
+    void ConstructEndFiberReflector();
     void ConstructPhotonDet();
     
     G4Box* fExperimentalHall_box;

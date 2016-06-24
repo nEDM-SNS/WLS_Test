@@ -9,4 +9,5 @@
 /gps/direction 0 -1 0
 #/gps/direction 1 0 0
 /gps/polarization 0 0 1 # dummy polarization
+/WLS_Test/run/setFileName output/Test
 /run/beamOn 100

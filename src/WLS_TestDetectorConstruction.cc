@@ -94,13 +94,15 @@ G4VPhysicalVolume* WLS_TestDetectorConstruction::ConstructDetector()
     
     fExperimentalHall_log->SetVisAttributes(G4VisAttributes::Invisible);
     
-    
-    ConstructCellPlates();
-    
-    //if (fParams->outer_reflector()) ConstructSquareTubeReflector();
-    if (fParams->outer_reflector()) ConstructFullTentReflector();
-    ConstructPhotonDet();
-    
+   // COMMENTED OUT UNTIL NEW GEOMETRY 
+   // ConstructCellPlates();
+   // 
+
+   // COMMENTED OUT UNTIL NEW GEOMETRY
+    if (fParams->outer_reflector()) ConstructCylindricalReflector();
+   // if (fParams->outer_reflector()) ConstructEndFiberReflector();
+   // ConstructPhotonDet();
+   // 
     
     return fExperimentalHall_phys;
 }
@@ -150,19 +152,21 @@ void WLS_TestDetectorConstruction::ConstructCellPlates()
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void WLS_TestDetectorConstruction::ConstructSquareTubeReflector()
+void WLS_TestDetectorConstruction::ConstructCylindricalReflector()
 {
-    // Reflector Wrapping
-    G4Box* OuterReflector = new G4Box("OuterReflector",8.*cm,8.*cm,fParams->cell_size().z());
-    G4Box* InnerReflector = new G4Box("InnerReflector",7.*cm,7.*cm,fParams->cell_size().z());
-    G4SubtractionSolid* SolidReflector = new G4SubtractionSolid("Reflector",OuterReflector,InnerReflector);
+
+    G4double refl_rad = 3.5925*cm + 10.*um;
+    G4double refl_length = 4.445*cm;
+
+    // Reflector Geometry
+    G4Tubs* CylindricalReflector = new G4Tubs("CylindricalReflector", refl_rad,refl_rad + 0.1*mm, refl_length, 0.*deg, 360.*deg );
     
-    G4LogicalVolume* Reflector_Log = new G4LogicalVolume(SolidReflector, G4Material::GetMaterial("PMMA"), "Reflector");
+    G4LogicalVolume* Reflector_Log = new G4LogicalVolume(CylindricalReflector, G4Material::GetMaterial("PMMA"), "Reflector");
     
     
     // Photon Energies for which mirror properties will be given
     const G4int kEnergies = 3;
-    G4double the_photon_energies_[kEnergies] = {2.034*eV, 4.136*eV, 16*eV};
+    G4double the_photon_energies_[kEnergies] = {2.*eV, 4.*eV, 16*eV};
     
     // Optical Surface for mirror
     G4OpticalSurface* mirror_surface_ =
@@ -170,7 +174,7 @@ void WLS_TestDetectorConstruction::ConstructSquareTubeReflector()
                          dielectric_dielectric);
     
     // Reflectivity of mirror for each photon energy
-    G4double mirror_REFL[kEnergies] = {0.998, 0.998, 0.998};
+    G4double mirror_REFL[kEnergies] = {0.96, 0.96, 0.96};
     
     //Table of Surface Properties for Mirror
     G4MaterialPropertiesTable* mirrorSurfaceProperty = new G4MaterialPropertiesTable();
@@ -197,7 +201,7 @@ void WLS_TestDetectorConstruction::ConstructSquareTubeReflector()
 }
 
 
-void WLS_TestDetectorConstruction::ConstructFullTentReflector()
+void WLS_TestDetectorConstruction::ConstructEndFiberReflector()
 {
     // Reflector Wrapping
     G4Box* BottomSolid = new G4Box("BottomReflector",2*fParams->cell_size().x(),0.1*cm,fParams->cell_size().z()*1.5);

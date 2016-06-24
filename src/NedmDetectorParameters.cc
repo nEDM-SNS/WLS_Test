@@ -17,14 +17,14 @@ void NedmDetectorParameters::SetDefaults() {
 
     cell_size_ = G4ThreeVector(cell_x,cell_y,cell_z);
     
+    // Do not change
+    cell_wall_on_ = true; //true
+    tpb_layer_on_ = true; //true
+    embedded_fibers_ = false; //false
+    fiber_reflector_ = false; //false
+    outer_reflector_ = true; //false
     
-    cell_wall_on_ = true;
-    tpb_layer_on_ = true;
-    embedded_fibers_ = true;
-    fiber_reflector_ = false;
-    outer_reflector_ = true;
-    
-    num_fibers_ = 98;
+    num_fibers_ = 100;
     //num_fibers_ = 5;
     fiber_thick_ = 0.100*cm;
     fiber_spacing_ = 0.103*cm;
