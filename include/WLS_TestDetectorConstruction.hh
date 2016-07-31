@@ -34,11 +34,14 @@ class WLS_TestDetectorConstruction : public G4VUserDetectorConstruction
     NedmDetectorParameters* fParams;
     
     G4VPhysicalVolume* ConstructDetector();
-    void ConstructCellPlates();
+    void ConstructSquarePMMA();
+    void ConstructCirclePMMAandFibers();
     void ConstructCylindricalReflector();
     void ConstructEndFiberReflector();
     void ConstructPhotonDet();
-    
+    void ConstructSiliconWafers();
+    void ConstructClearFibers();
+
     G4Box* fExperimentalHall_box;
     G4LogicalVolume* fExperimentalHall_log;
     G4VPhysicalVolume* fExperimentalHall_phys;

@@ -86,30 +86,31 @@ G4VPhysicalVolume* WLS_TestDetectorConstruction::ConstructDetector()
     fExperimentalHall_box
     = new G4Box("expHall_box",expHall_x,expHall_y,expHall_z);
     fExperimentalHall_log = new G4LogicalVolume(fExperimentalHall_box,
-                                                G4Material::GetMaterial("G4_AIR"),
+                                                G4Material::GetMaterial("LHe"),
                                             //G4Material::GetMaterial("Vacuum"),
                                                 "expHall_log",0,0,0);
     
     fExperimentalHall_phys = new G4PVPlacement(0,G4ThreeVector(),fExperimentalHall_log,"expHall",0,false,0);
     
     fExperimentalHall_log->SetVisAttributes(G4VisAttributes::Invisible);
-    
-   // COMMENTED OUT UNTIL NEW GEOMETRY 
-   // ConstructCellPlates();
-   // 
-
-   // COMMENTED OUT UNTIL NEW GEOMETRY
+     
+    ConstructSquarePMMA();
+    ConstructCirclePMMAandFibers();
     if (fParams->outer_reflector()) ConstructCylindricalReflector();
-   // if (fParams->outer_reflector()) ConstructEndFiberReflector();
-   // ConstructPhotonDet();
-   // 
+    if (fParams->outer_reflector()) ConstructEndFiberReflector();
+   
+   
+    ConstructPhotonDet();
+    ConstructSiliconWafers();
+    ConstructClearFibers();
+    
     
     return fExperimentalHall_phys;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void WLS_TestDetectorConstruction::ConstructCellPlates()
+void WLS_TestDetectorConstruction::ConstructSquarePMMA()
 {
     // number of fibers
     G4int nFibers = fParams->num_fibers();
@@ -121,42 +122,85 @@ void WLS_TestDetectorConstruction::ConstructCellPlates()
     G4RotationMatrix* rotX = new G4RotationMatrix();
     rotX->rotateX(180*deg);
     
-    // Create Cell Wall
+    G4double displacement = -2.111375*cm;
+
+  // Create Cell Wall //
     if (fParams->cell_wall_on())
     {
-        new NedmCellSide(0,G4ThreeVector(0.,0.,0.),fExperimentalHall_log,0);
-        
-        if (fParams->embedded_fibers()==false)
-        {
-            G4double Y_pos = 1*(fParams->cell_size().y()+fParams->fiber_thick()/2+.005);
-            
-            for(G4int i=0;i<nFibers;i++){
-                G4double X_pos=-(spacing)*(nFibers-1)*0.5 + i*spacing;
-                new NedmWLSFiber(0,G4ThreeVector(X_pos,Y_pos,0.),fExperimentalHall_log,false,0,fParams->fiber_reflector());
-                
-            }
-        }
+        new NedmCellSide(0,G4ThreeVector(0.,displacement,0.),fExperimentalHall_log,0);
     }
     
     // No Cell Wall
-    else {
+  //  else {
         
         //Place fibers only
-        for(G4int i=0;i<nFibers;i++){
-            G4double X_pos=-(spacing)*(nFibers-1)*0.5 + i*spacing;
-            new NedmWLSFiber(0,G4ThreeVector(X_pos,0.,0.),fExperimentalHall_log,false,0,fParams->fiber_reflector());
-        }
+    //    for(G4int i=0;i<nFibers;i++){
+      //      G4double X_pos=-(spacing)*(nFibers-1)*0.5 + i*spacing;
+        //    new NedmWLSFiber(0,G4ThreeVector(X_pos,0.,0.),fExperimentalHall_log,false,0,fParams->fiber_reflector());
+      //  }
         
-    }
+  //  }
  
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+void WLS_TestDetectorConstruction::ConstructCirclePMMAandFibers()
+{
+// Circle PMMA //
+    
+    G4double radMin = fParams->cellCircleInner_rad();
+    G4double radMax = fParams->cellCircleOuter_rad();
+    G4double half_z = fParams->cell_half_z()+ 3.175*cm;
+
+    G4Tubs* cellSide_solid = new G4Tubs("CircleCell",
+                                        radMin,
+					radMax,
+					half_z,
+					0*deg,
+					360*deg);
+
+    G4LogicalVolume* cellSide_log =
+    new G4LogicalVolume(cellSide_solid, G4Material::GetMaterial("PMMA"), "CircleCell");
+    
+    G4ThreeVector circle_pos = G4ThreeVector(0, 0, -3.175*cm);
+
+    new G4PVPlacement(0,               
+                      circle_pos,   
+		      cellSide_log,    
+	              "CircularCell",        
+                      fExperimentalHall_log, 
+                      false,
+		      0,
+		      overlapCheck);
+
+    G4VisAttributes* cellVis = new G4VisAttributes(G4Color(0.8,0.8,0.8));
+    cellVis->SetVisibility(true);
+    cellSide_log->SetVisAttributes(cellVis);
+
+
+
+// Fibers //
+
+    G4int nFibers = fParams->num_fibers();
+    G4double R_pos = fParams->cellCircleOuter_rad() + (fParams->fiber_thick())/2;
+    G4double Z_pos = -71.755*cm;
+
+    for(G4int i=0;i<nFibers;i++)
+        {
+	G4double Phi_pos = (i*twopi)/nFibers;
+	G4double X_pos = R_pos*cos(Phi_pos);
+	G4double Y_pos = R_pos*sin(Phi_pos);
+        new NedmWLSFiber(0, G4ThreeVector(X_pos,Y_pos,Z_pos), fExperimentalHall_log, false, 0, fParams->fiber_reflector());	
+	}
+
+    
+}
+
 void WLS_TestDetectorConstruction::ConstructCylindricalReflector()
 {
 
-    G4double refl_rad = 3.5925*cm + 10.*um;
-    G4double refl_length = 4.445*cm;
+    G4double refl_rad = 3.5925*cm + 0.35*mm;
+    G4double refl_length = fParams->cell_half_z() + 6.985*cm;
 
     // Reflector Geometry
     G4Tubs* CylindricalReflector = new G4Tubs("CylindricalReflector", refl_rad,refl_rad + 0.1*mm, refl_length, 0.*deg, 360.*deg );
@@ -184,13 +228,15 @@ void WLS_TestDetectorConstruction::ConstructCylindricalReflector()
     new G4LogicalSkinSurface("Reflector_surface", Reflector_Log, mirror_surface_);
     
     
-    G4VisAttributes* ReflectVis=new G4VisAttributes(G4Color(1.0,1.0,1.0));
+    G4VisAttributes* ReflectVis=new G4VisAttributes(G4Color(1.0,0.2,1.0));
     ReflectVis->SetVisibility(true);
     ReflectVis->SetForceWireframe(true);
     Reflector_Log->SetVisAttributes(ReflectVis);
     
+    G4ThreeVector refl_pos = G4ThreeVector(0., 0.,-6.985*cm);
+
     new G4PVPlacement(0,                            //no rotation
-                      G4ThreeVector(),              //at (0,0,0)
+                      refl_pos,              //at (0,0,0)
                       Reflector_Log,                     //its logical volume
                       "Reflector",            //its name
                       fExperimentalHall_log,                //its mother  volume
@@ -203,23 +249,19 @@ void WLS_TestDetectorConstruction::ConstructCylindricalReflector()
 
 void WLS_TestDetectorConstruction::ConstructEndFiberReflector()
 {
+       
     // Reflector Wrapping
-    G4Box* BottomSolid = new G4Box("BottomReflector",2*fParams->cell_size().x(),0.1*cm,fParams->cell_size().z()*1.5);
-    
-    
-    G4double topReflRad = 2.*fParams->cell_size().x();
-    G4Tubs* TopSolid = new G4Tubs("InnerReflector",topReflRad,topReflRad+.1*cm,fParams->cell_size().z()*1.5,.215*pi,.57*pi);
-    
-    G4Tubs* EndSolid = new G4Tubs("EndSolid",0,topReflRad+.1*cm,.1*cm,.215*pi,.57*CLHEP::pi);
-    
-    G4UnionSolid* TempRefl1 = new G4UnionSolid("tempRefl1",BottomSolid,EndSolid,0,G4ThreeVector(0.,-5./8.*topReflRad,fParams->cell_size().z()*1.5));
-    
-    G4UnionSolid* TempRefl2 = new G4UnionSolid("tempRefl2",TempRefl1,EndSolid,0,G4ThreeVector(0.,-5./8.*topReflRad,-1*fParams->cell_size().z()*1.5));
+    G4double R_min = fParams->cellCircleOuter_rad();
+    G4double R_max = 3.5925*cm + 0.35*mm;
 
-    G4UnionSolid* SolidReflector = new G4UnionSolid("Reflector", TempRefl2, TopSolid,0,G4ThreeVector(0.,-5./8.*topReflRad,0.));
+    G4Tubs* endReflector_solid = new G4Tubs("EndReflector",
+                                            R_min,
+					    R_max,
+					    0.1*mm,
+					    0.,
+					    360*deg);
     
-    
-    G4LogicalVolume* Reflector_Log = new G4LogicalVolume(SolidReflector, G4Material::GetMaterial("PMMA"), "Reflector");
+    G4LogicalVolume* endReflector_log = new G4LogicalVolume(endReflector_solid, G4Material::GetMaterial("PMMA"), "Reflector");
     
     
     // Photon Energies for which mirror properties will be given
@@ -239,51 +281,150 @@ void WLS_TestDetectorConstruction::ConstructEndFiberReflector()
     mirrorSurfaceProperty->AddProperty("REFLECTIVITY", the_photon_energies_, mirror_REFL, kEnergies);
     mirror_surface_->SetMaterialPropertiesTable(mirrorSurfaceProperty);
     
-    new G4LogicalSkinSurface("Reflector_surface", Reflector_Log, mirror_surface_);
+    new G4LogicalSkinSurface("Reflector_surface", endReflector_log, mirror_surface_);
     
     
-    G4VisAttributes* ReflectVis=new G4VisAttributes(G4Color(1.0,1.0,1.0));
+    G4VisAttributes* ReflectVis=new G4VisAttributes(G4Color(1.0,0.2,1.0));
     ReflectVis->SetVisibility(true);
     ReflectVis->SetForceWireframe(true);
-    Reflector_Log->SetVisAttributes(ReflectVis);
+    endReflector_log->SetVisAttributes(ReflectVis);
     
-    G4ThreeVector reflectorPos = G4ThreeVector(0.,-2*fParams->cell_size().y(),0.);
+    G4ThreeVector reflectorPos = G4ThreeVector(0.,0.,fParams->cell_half_z() + 0.11*mm);
     
     new G4PVPlacement(0,                            //no rotation
                       reflectorPos,              //at (0,0,0)
-                      Reflector_Log,                     //its logical volume
-                      "Reflector",            //its name
+                      endReflector_log,                     //its logical volume
+                     "Reflector",            //its name
                       fExperimentalHall_log,                //its mother  volume
                       false,                        //no boolean operation
-                      0,overlapCheck);                            //copy number
+                      0,
+		      overlapCheck);                            //copy number
     
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void WLS_TestDetectorConstruction::ConstructSiliconWafers(){
+
+    G4double silicon_xy = 4.*cm;
+    G4double silicon_thick = 0.5*mm;
+
+    G4Box* silicon_solid = new G4Box("SiliconCookie",
+                                     silicon_xy,
+				     silicon_xy,
+				     silicon_thick);
+
+    G4LogicalVolume* silicon_log = new G4LogicalVolume(silicon_solid, G4Material::GetMaterial("Silicone"), "SiliconCookie");
+
+    G4ThreeVector wafer_pos1 = G4ThreeVector(0.,0.,-1*(silicon_thick + 152.4*cm - fParams->cell_half_z()));
+    G4ThreeVector wafer_pos2 = wafer_pos1 - G4ThreeVector(0.,0., 2*silicon_thick + 30.48*cm);
+
+    new G4PVPlacement(0,                            //no rotation
+                      wafer_pos1,              //at (0,0,0)
+                      silicon_log,                     //its logical volume
+                      "SiliconeCookie1",            //its name
+                      fExperimentalHall_log,                //its mother  volume
+                      false,                        //no boolean operation
+                      0,
+		      overlapCheck);                            //copy number
+
+    new G4PVPlacement(0,                            //no rotation
+                      wafer_pos2,              //at (0,0,0)
+		      silicon_log,                     //its logical volume 
+		      "SiliconeCookie2",            //its name
+                      fExperimentalHall_log,                //its mother  volume
+                      false,                        //no boolean operation
+                      0,
+                      overlapCheck);                            //copy number
+
+
+
+    G4VisAttributes* siliconVis = new G4VisAttributes(G4Color(0.18,0.22,0.02));
+    siliconVis->SetVisibility(true);
+    silicon_log->SetVisAttributes(siliconVis);
+
+
+}
+
+void WLS_TestDetectorConstruction::ConstructClearFibers(){
+
+    G4double half_z = 15.24*cm; // 6 inches
+    G4Tubs* clearFiberClad_solid = new G4Tubs("clearFiberClad",
+                                              0,
+					      0.75*mm,
+					      half_z,
+					      0,
+					      360.*deg);
+    
+    G4Tubs* clearFiberCore_solid = new G4Tubs("ClearFiberCore",
+                                              0,
+					      0.72*mm,
+					      half_z,
+					      0,
+					      360.*deg);
+
+    G4LogicalVolume* clearFiberCore_log = new G4LogicalVolume(clearFiberCore_solid, G4Material::GetMaterial("ClearCore"), "ClearFiberCore");
+
+    G4LogicalVolume* clearFiberClad_log = new G4LogicalVolume(clearFiberClad_solid, G4Material::GetMaterial("ClearClad"), "ClearFiberCladding");
+
+    G4int nFibers = fParams->num_fibers();
+    G4double R_pos = fParams->cellCircleOuter_rad() + (fParams->fiber_thick())/2;
+    G4ThreeVector origin = G4ThreeVector(0.,0.,0.);
+
+    for(G4int i=0;i<nFibers;i++)
+    {
+        G4double Phi_pos = (i*twopi)/nFibers;
+        G4double X_pos = R_pos*cos(Phi_pos);
+        G4double Y_pos = R_pos*sin(Phi_pos);
+        G4ThreeVector fiber_pos = G4ThreeVector(X_pos, Y_pos, -1*(half_z + 152.5*cm - fParams->cell_half_z()));
+
+        new G4PVPlacement(0,                            
+                          fiber_pos,              
+                          clearFiberClad_log,                     
+                          "ClearFiberCladding",            
+                          fExperimentalHall_log,                
+                          false,                        
+                          0,
+                          overlapCheck);
+
+        new G4PVPlacement(0,                            
+                          origin,              
+                          clearFiberCore_log,                       
+                          "ClearFiberCore",            
+                          clearFiberClad_log,
+                          false,
+                          0,
+                          overlapCheck);
+    };
+
+
+    G4VisAttributes* clearCladVis = new G4VisAttributes(G4Color(1.0,1.0,1.0));
+    clearCladVis->SetVisibility(true);
+    clearFiberClad_log->SetVisAttributes(clearCladVis);
+    clearFiberCore_log->SetVisAttributes(clearCladVis);
+
+}
+
+//....ooo00000ooo........ooo00000ooo........ooo00000ooo........ooo00000ooo......
+
 void WLS_TestDetectorConstruction::ConstructPhotonDet(){
-    G4Box* photDet_Solid = new G4Box("photDet",
-                                     fParams->cell_size().x(),
-                                     fParams->fiber_spacing()/2,
-                                     .1*mm);
+    
+    G4Tubs* photDet_Solid = new G4Tubs("photDet",
+                                     3.2*cm,
+                                     3.8*cm,
+                                     1.*mm,
+				     0.,
+				     360*deg);
     
     G4LogicalVolume* photonDet_log = new G4LogicalVolume(photDet_Solid,G4Material::GetMaterial("PMMA"),"photDet");
-
-    G4double YPos;
-    if (fParams->embedded_fibers()) {
-         YPos=fParams->cell_size().y()-fParams->fiber_thick()/2-.005;
-    }
-    else
-    {
-        YPos =fParams->cell_size().y()+fParams->fiber_thick()/2+.005;
-//	YPos =0*mm;
-    }
-    G4double ZPos = fParams->cell_size().z() + .1*mm;
     
-    new G4PVPlacement(0,G4ThreeVector(0,-1*YPos,ZPos),photonDet_log,"photDet1",fExperimentalHall_log,false,0,overlapCheck);
+    G4double ZPos = 152.7*cm - fParams->cell_half_z() + 30.39*cm;
 
-    new G4PVPlacement(0,G4ThreeVector(0,-1*YPos,-1*ZPos),photonDet_log,"photDet2",fExperimentalHall_log,false,0,overlapCheck);
+    new G4PVPlacement(0,G4ThreeVector(0,0,-1*ZPos),photonDet_log,"photDet1",fExperimentalHall_log,false,0,overlapCheck);
+
+   // new G4PVPlacement(0,G4ThreeVector(0,-1*YPos,-1*ZPos),photonDet_log,"photDet2",fExperimentalHall_log,false,0,overlapCheck);
     
-    G4VisAttributes* DetVis=new G4VisAttributes(G4Color(0.0,0.0,1.0));
+    G4VisAttributes* DetVis=new G4VisAttributes(G4Color(1.0,0.0,0.0));
     DetVis->SetVisibility(true);
     DetVis->SetForceWireframe(true);
     photonDet_log->SetVisAttributes(DetVis);

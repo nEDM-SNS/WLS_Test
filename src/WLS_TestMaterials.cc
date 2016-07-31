@@ -85,6 +85,20 @@ void WLS_TestMaterials::CreateMaterials()
     fAir = fNistMan->FindOrBuildMaterial("G4_AIR");
     
     //--------------------------------------------------
+    // Liquid Helium
+    //--------------------------------------------------
+    
+    elements.push_back("He");    natoms.push_back(1);
+
+    density = 0.14*g/cm3;
+
+    fLHe = fNistMan->
+    ConstructNewMaterial("LHe", elements, natoms, density);
+
+    elements.clear();
+    natoms.clear();
+
+    //--------------------------------------------------
     // PMMA
     //--------------------------------------------------
     
@@ -136,6 +150,38 @@ void WLS_TestMaterials::CreateMaterials()
     elements.clear();
     natoms.clear();
     
+    //-------------------------------------------------
+    // Clear Fiber Core
+    //-------------------------------------------------
+
+    elements.push_back("C");    natoms.push_back(5);
+    elements.push_back("H");    natoms.push_back(8);
+    elements.push_back("O");    natoms.push_back(2);
+
+    density = 1.19*g/cm3;
+
+    fClearCore = fNistMan->
+    ConstructNewMaterial("ClearCore", elements, natoms, density);
+
+    elements.clear();
+    natoms.clear();
+
+    //-------------------------------------------------
+    // Clear Fiber Cladding
+    //-------------------------------------------------
+
+    elements.push_back("C");     natoms.push_back(2);
+    elements.push_back("H");     natoms.push_back(4);
+
+    density = 1.200*g/cm3;
+
+    fClearClad = fNistMan->
+    ConstructNewMaterial("ClearClad", elements, natoms, density);
+
+    elements.clear();
+    natoms.clear();
+
+
     //--------------------------------------------------
     // Polystyrene
     //--------------------------------------------------
@@ -169,7 +215,12 @@ void WLS_TestMaterials::CreateMaterials()
 
     fTPB_inner = new G4Material("TPB_inner",density,fTPB_outer);
     
-    
+    elements.clear();
+    natoms.clear();
+
+    density = 1.46*g/cm3;
+
+    fTPB_evap = new G4Material("TPB_evap", density, fTPB_outer);
     
     /*
     Just use TPB for now. Is the following ever needed?
@@ -234,7 +285,7 @@ void WLS_TestMaterials::CreateMaterials()
     //  427.5,  423.2,  418.9,  414.7,  410.5,
     //  406.5,  402.5,  398.7,  394.9,  391.1,
     //  387.5,  383.9,  380.3,  376.9,  373.4,
-    //  370.1,  366.8,  363.6,  360.4,  357.3}
+    //  370.1,  366.8,  363.6,  360.4,  80.0}
 
     const G4int nEntries = sizeof(photonEnergy)/sizeof(G4double);
 
@@ -263,7 +314,7 @@ void WLS_TestMaterials::CreateMaterials()
     //  305.4,  300.9,  296.6,  292.4,  288.3,
     //  284.4,  280.5,  276.8,  273.1,  269.5,
     //  266.1,  262.7,  259.4,  256.2,  253.0,
-    //  250.0,  247.0,  244.1,  241.2,  238.4}
+    //  250.0,  247.0,  244.1,  241.2,  80.0}
 
     const G4int nEntriesAcr = sizeof(acrylicPhotonEnergy)/sizeof(G4double);
     
@@ -285,6 +336,24 @@ void WLS_TestMaterials::CreateMaterials()
     
     fAir->SetMaterialPropertiesTable(mpt);
     
+    //--------------------------------------------------
+    // Liguid Helium
+    //--------------------------------------------------
+    
+    G4double refractiveIndexLHe[] =
+    { 1.028, 1.028, 1.028, 1.028, 1.028, 1.028, 1.028, 1.028, 1.028, 1.028,
+        1.028, 1.028, 1.028, 1.028, 1.028, 1.028, 1.028, 1.028, 1.028, 1.028,
+        1.028, 1.028, 1.028, 1.028, 1.028, 1.028, 1.028, 1.028, 1.028, 1.028,
+	1.028, 1.028, 1.028, 1.028, 1.028, 1.028, 1.028, 1.028, 1.028, 1.028,
+	1.028, 1.028, 1.028, 1.028, 1.028, 1.028, 1.028, 1.028, 1.028, 1.028};
+
+    assert(sizeof(refractiveIndexLHe) == sizeof(photonEnergy));
+
+    G4MaterialPropertiesTable* mptLHe = new G4MaterialPropertiesTable();
+    mptLHe->AddProperty("RINDEX", photonEnergy, refractiveIndexLHe, nEntries);
+
+    fLHe->SetMaterialPropertiesTable(mptLHe);
+
     //--------------------------------------------------
     //  Regular PMMA properties - used everywhere but fiber
     //--------------------------------------------------
@@ -420,17 +489,17 @@ void WLS_TestMaterials::CreateMaterials()
     mptClad2->AddProperty("ABSLENGTH",photonEnergy,absClad,nEntries);
     
     fFPethylene->SetMaterialPropertiesTable(mptClad2);
-    
+
     //--------------------------------------------------
     // Silicone
     //--------------------------------------------------
     
     G4double refractiveIndexSilicone[] =
-    { 1.46, 1.46, 1.46, 1.46, 1.46, 1.46, 1.46, 1.46, 1.46, 1.46,
-        1.46, 1.46, 1.46, 1.46, 1.46, 1.46, 1.46, 1.46, 1.46, 1.46,
-        1.46, 1.46, 1.46, 1.46, 1.46, 1.46, 1.46, 1.46, 1.46, 1.46,
-        1.46, 1.46, 1.46, 1.46, 1.46, 1.46, 1.46, 1.46, 1.46, 1.46,
-        1.46, 1.46, 1.46, 1.46, 1.46, 1.46, 1.46, 1.46, 1.46, 1.46};
+    { 1.4074, 1.4074, 1.4074, 1.4074, 1.4074, 1.4074, 1.4074, 1.4074, 1.4074, 1.4074,
+        1.4074, 1.4074, 1.4074, 1.4074, 1.4074, 1.4074, 1.4074, 1.4074, 1.4074, 1.4074,
+	1.4074, 1.4074, 1.4074, 1.4074, 1.4074, 1.4074, 1.4074, 1.4074, 1.4074, 1.4074,
+	1.4074, 1.4074, 1.4074, 1.4074, 1.4074, 1.4074, 1.4074, 1.4074, 1.4074, 1.4074,
+	1.4074, 1.4074, 1.4074, 1.4074, 1.4074, 1.4074, 1.4074, 1.4074, 1.4074, 1.4074};
     
     assert(sizeof(refractiveIndexSilicone) == sizeof(photonEnergy));
     
@@ -442,6 +511,46 @@ void WLS_TestMaterials::CreateMaterials()
     
     fSilicone->SetMaterialPropertiesTable(mptSilicone);
     
+    //--------------------------------------------------
+    // Clear Fiber Core
+    //--------------------------------------------------
+   
+    G4double refractiveIndexClearCore[] = 
+    { 1.492, 1.492, 1.492, 1.492, 1.492, 1.492, 1.492, 1.492, 1.492,1.492,
+        1.492, 1.492, 1.492, 1.492, 1.492, 1.492, 1.492, 1.492, 1.492,1.492,
+        1.492, 1.492, 1.492, 1.492, 1.492, 1.492, 1.492, 1.492, 1.492,1.492,
+        1.492, 1.492, 1.492, 1.492, 1.492, 1.492, 1.492, 1.492, 1.492,1.492,
+        1.492, 1.492, 1.492, 1.492, 1.492, 1.492, 1.492, 1.492, 1.492,1.492};
+
+    assert(sizeof(refractiveIndexClearCore) == sizeof(photonEnergy));
+
+    // Add entries into properties table
+    G4MaterialPropertiesTable* mptClearCore = new G4MaterialPropertiesTable();
+    mptClearCore->
+    AddProperty("RINDEX", photonEnergy, refractiveIndexClearCore, nEntries);
+
+    fClearCore->SetMaterialPropertiesTable(mptClearCore);
+
+    //--------------------------------------------------
+    // Clear Fiber Cladding
+    //--------------------------------------------------
+
+    G4double refractiveIndexClearClad[] = 
+    { 1.402, 1.402, 1.402, 1.402, 1.402, 1.402, 1.402, 1.402, 1.402, 1.402,
+        1.402, 1.402, 1.402, 1.402, 1.402, 1.402, 1.402, 1.402, 1.402, 1.402,
+        1.402, 1.402, 1.402, 1.402, 1.402, 1.402, 1.402, 1.402, 1.402, 1.402,
+        1.402, 1.402, 1.402, 1.402, 1.402, 1.402, 1.402, 1.402, 1.402, 1.402,
+        1.402, 1.402, 1.402, 1.402, 1.402, 1.402, 1.402, 1.402, 1.402, 1.402};
+
+    assert(sizeof(refractiveIndexClearClad) == sizeof(photonEnergy));
+
+    // Add entries into properties table
+    G4MaterialPropertiesTable* mptClearClad = new G4MaterialPropertiesTable();
+    mptClearClad->
+    AddProperty("RINDEX", photonEnergy, refractiveIndexClearCore, nEntries);
+
+    fClearClad->SetMaterialPropertiesTable(mptClearClad);
+
     //--------------------------------------------------
     //  Polystyrene
     //--------------------------------------------------
@@ -542,6 +651,40 @@ void WLS_TestMaterials::CreateMaterials()
     mptTPB_outer->AddProperty("WLSCOMPONENT", acrylicPhotonEnergy, emissionTPB, nEntriesAcr);
     mptTPB_outer->AddConstProperty("WLSTIMECONSTANT", 0.01*ns);
     fTPB_outer->SetMaterialPropertiesTable(mptTPB_outer);
+
+    //--------------------------------------------------
+    // Evaporated TPB
+    //--------------------------------------------------
+
+    G4double absWLSTPBEvap[] = 
+    {1.*km, 1.*km, 1.*km, 1.*km, 1.*km, 1.*km, 1.*km, 1.*km, 1.*km, 1.*km,
+        1.*km, 1.*km, 1.*km, 1.*km, 1.*km, 1.*km, 1.*km, 1.*km, 1.*km, 1.*km,
+	1.*nm, 1.*nm, 1.*nm, 1.*nm, 1.*nm, 1.*nm, 1.*nm, 1.*nm, 1.*nm, 1.*nm,
+	1.*nm, 1.*nm, 1.*nm, 1.*nm, 1.*nm, 1.*nm, 1.*nm, 1.*nm, 1.*nm, 1.*nm,
+	1.*nm, 1.*nm, 1.*nm, 1.*nm, 1.*nm, 1.*nm, 1.*nm, 1.*nm, 1.*nm, 1.*nm,
+	1.*nm, 1.*nm, 1.*nm, 1.*nm, 1.*nm};
+    // Effectively absorbs all EUV light at the surface
+    
+    assert(sizeof(absWLSTPBEvap) == sizeof(acrylicPhotonEnergy));
+    
+    G4double emissionEvapTPB[]=
+    {0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.01, 0.01, 0.02, 0.02,
+        0.04, 0.05, 0.08, 0.09, 0.11, 0.13, 0.14, 0.14, 0.10, 0.07,
+        0.02, 0.01, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+        0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+        0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+        0.00, 0.00, 0.00, 0.00, 0.00};
+
+    assert(sizeof(emissionEvapTPB) == sizeof(acrylicPhotonEnergy));
+
+    G4MaterialPropertiesTable* mptTPB_evap = new G4MaterialPropertiesTable();
+    mptTPB_evap->AddProperty("RINDEX", photonEnergy, refractiveIndexPMMA, nEntries);
+    mptTPB_evap->AddProperty("WLSABSLENGTH", acrylicPhotonEnergy, absWLSTPBEvap, nEntriesAcr);
+    mptTPB_evap->AddConstProperty("WLSTIMECONSTANT", 0.01*ns);
+    mptTPB_evap->AddProperty("WLSCOMPONENT", acrylicPhotonEnergy, emissionEvapTPB, nEntriesAcr);
+    fTPB_evap->SetMaterialPropertiesTable(mptTPB_evap);
+
+    //---------------------------------------------------------------------------------------------------
 
 /* Not used anymore
     //--------------------------------------------------

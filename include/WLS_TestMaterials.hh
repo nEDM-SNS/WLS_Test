@@ -28,7 +28,7 @@ class WLS_TestMaterials
     G4NistManager*     fNistMan;
 
     G4Material*        fAir;
-
+    G4Material*        fLHe;
     G4Material*        fPMMA;
     G4Material*        fWLSPMMA;
     G4Material*        fPethylene;
@@ -37,7 +37,9 @@ class WLS_TestMaterials
     G4Material*        fTPB_outer;
     G4Material*        fTPB_inner;
     G4Material*        fSilicone;
-
+    G4Material*        fClearCore;
+    G4Material*        fClearClad;
+    G4Material*        fTPB_evap;
 };
 
 #endif /*WLS_TestMaterials_h*/
