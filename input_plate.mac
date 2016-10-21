@@ -7,7 +7,7 @@
 
 /gps/ang/type beam1d
 #/gps/ang/type iso
-/gps/direction 0 -1 0
+/gps/direction 0 1 0
 #/gps/direction 1 0 0
 /gps/polarization 0 0 1 # dummy polarization
 
@@ -23,6 +23,7 @@
 
 
 
-/gps/position 0 0.650 0 cm # 
+/gps/position 0 -0.650 0 cm #
 /WLS_Test/run/setFileName Test
+#/run/beamOn 1
 /run/beamOn 10000

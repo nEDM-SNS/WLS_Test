@@ -22,7 +22,7 @@ public:
     inline G4int num_fibers() const { return num_fibers_;}
     inline G4double fiber_thick() const { return fiber_thick_; }
     inline G4double fiber_spacing() const { return fiber_spacing_;}
-    
+    inline G4double tpb_outer_fraction() const {return tpb_outer_fraction_;}
     // Setters
 
 private:
@@ -43,6 +43,7 @@ private:
     G4int num_fibers_;
     G4double fiber_thick_;
     G4double fiber_spacing_;
+    G4double tpb_outer_fraction_;
 
 
     

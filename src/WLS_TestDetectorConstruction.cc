@@ -122,7 +122,7 @@ void WLS_TestDetectorConstruction::ConstructCellPlates()
     // Create Cell Wall
     if (fParams->cell_wall_on())
     {
-        new NedmCellSide(0,G4ThreeVector(0.,0.,0.),fExperimentalHall_log,0);
+        new NedmCellSide(rotX,G4ThreeVector(0.,0.,0.),fExperimentalHall_log,0);
         
         if (fParams->embedded_fibers()==false)
         {
@@ -275,9 +275,9 @@ void WLS_TestDetectorConstruction::ConstructPhotonDet(){
     }
     G4double ZPos = fParams->cell_size().z() + .1*mm;
     
-    new G4PVPlacement(0,G4ThreeVector(0,-1*YPos,ZPos),photonDet_log,"photDet1",fExperimentalHall_log,false,0,overlapCheck);
+    new G4PVPlacement(0,G4ThreeVector(0,YPos,ZPos),photonDet_log,"photDet1",fExperimentalHall_log,false,0,overlapCheck);
 
-    new G4PVPlacement(0,G4ThreeVector(0,-1*YPos,-1*ZPos),photonDet_log,"photDet2",fExperimentalHall_log,false,0,overlapCheck);
+    new G4PVPlacement(0,G4ThreeVector(0,YPos,-1*ZPos),photonDet_log,"photDet2",fExperimentalHall_log,false,0,overlapCheck);
     
     G4VisAttributes* DetVis=new G4VisAttributes(G4Color(0.0,0.0,1.0));
     DetVis->SetVisibility(true);
