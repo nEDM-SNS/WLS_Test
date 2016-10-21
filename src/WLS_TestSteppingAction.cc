@@ -85,7 +85,7 @@ void WLS_TestSteppingAction::UserSteppingAction(const G4Step* aStep)
             
         }
 #else
-        if ((thePrePVname == "Fiber" || thePrePVname == "Mirror" || thePrePVname =="Cladding1" || thePrePVname == "Cladding2" || thePrePVname == "SiliconeCookie2") && thePostPVname== "photDet1") {
+        if ((thePrePVname == "Fiber" || thePrePVname == "Mirror" || thePrePVname =="Cladding1" || thePrePVname == "Cladding2") && thePostPVname== "photDet1") {
             G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
             G4double cosTheta = thePrePoint->GetMomentumDirection().z();
             

@@ -26,9 +26,6 @@ class NedmCellSide : public G4PVPlacement {
     void ConstructEmbeddedFibers();
     
     G4ThreeVector fCell_Size;
-    G4double fCell_Size_z;
-    G4double fCell_Size_Inner;
-    G4double fCell_Size_Outer;
     G4double fTPB_Thickness;
     G4double fTPB_outerFraction;
  

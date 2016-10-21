@@ -93,8 +93,7 @@ NedmWLSFiber::NedmWLSFiber(G4RotationMatrix *pRot,
     
     
     SetLogicalVolume(fClad2_log);
-   
-    // KEEP REFLECTOR OFF
+    
     if (Reflector) {
         // Fiber Reflector
         G4Tubs* solidMirror = new G4Tubs("Mirror",
@@ -155,8 +154,7 @@ void NedmWLSFiber::CopyValues(){
     fClad2_rmin = 0.;
     fClad2_rmax = params->fiber_thick()/2;
     
-    // fClad2_z    = params->cell_size().z();
-    fClad2_z = 76.2*cm;
+    fClad2_z    = params->cell_size().z();
     fClad2_sphi = 0.00*deg;
     fClad2_ephi = 360.*deg;
  
