@@ -28,5 +28,6 @@ void NedmDetectorParameters::SetDefaults() {
     //num_fibers_ = 5;
     fiber_thick_ = 0.100*cm;
     fiber_spacing_ = 0.103*cm;
-    tpb_outer_fraction_ = 0.01;
+    tpb_outer_fraction_ = 0.10;
+                     
 }
