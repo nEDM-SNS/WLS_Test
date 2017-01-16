@@ -24,7 +24,7 @@ void NedmDetectorParameters::SetDefaults() {
     cellCircleInner_rad_ = 3.175*cm;
     cellCircleOuter_rad_ = cellCircleInner_rad_ + 0.3175*cm;
     
-    G4double TPBouterFraction_ = 0.01;
+    //G4double TPBouterFraction_ = 0.01;
 
     // Do not change
     cell_wall_on_ = true; //true

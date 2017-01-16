@@ -31,7 +31,7 @@ NedmWLSFiber::NedmWLSFiber(G4RotationMatrix *pRot,
 {
     CopyValues();
     
-    G4bool overlapCheck = false;
+    G4bool overlapCheck = true;
     
     // Boundary Surface Properties
     G4OpticalSurface* opSurface = NULL;

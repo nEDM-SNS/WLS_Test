@@ -38,8 +38,7 @@ class WLS_TestDetectorConstruction : public G4VUserDetectorConstruction
     void ConstructCirclePMMAandFibers();
     void ConstructCylindricalReflector();
     void ConstructEndFiberReflector();
-    void ConstructPhotonDet();
-    void ConstructSiliconWafers();
+    void ConstructSiliconWafersAndPhotDet();
     void ConstructClearFibers();
 
     G4Box* fExperimentalHall_box;
